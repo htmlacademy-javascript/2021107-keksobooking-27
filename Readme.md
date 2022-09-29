@@ -1,7 +1,7 @@
 # Личный проект «Кексобукинг»
 
 * Студент: [Александр Паршин](https://up.htmlacademy.ru/javascript/27/user/2021107).
-* Наставник: `Неизвестно`.
+* Наставник: [Евгений Лепёшкин](https://htmlacademy.ru/profile/spearance).
 
 ---
 
