@@ -10,43 +10,46 @@ const locations = {
   DECIMAL_PLACE: 5
 };
 
-const author = [];
+// const author = [];
+// let locations1 = [];
+
+// const offer = [
+//   title,
+//   address,
+//   price,
+//   type: [palace, flat, house,  hotel],
+//   rooms,
+//   guests,
+//   checkin,
+//   checkout,
+//   features: [wifi, dishwasher, parking, washer, elevator, conditioner],
+//   description,
+//   photos
+// ];
+
+// описывает автора
+const getAuthorCreating = () => ({
+  avatar: `img/avatars/user${getRandomArbitrary(START_ELEMNT, FINISH_ELEMNT).toString().padStart(2, 0)}.png`,
+});
 
 
+// const sozdanieMassiva = () => {
+//   //описывает автора
+//   const avatar = `img/avatars/user${getRandomArbitrary(START_ELEMNT, FINISH_ELEMNT)}.png`;
 
-const offer = [
-  title,
-  address,
-  price,
-  type: [palace, flat, house,  hotel],
-  rooms,
-  guests,
-  checkin,
-  checkout,
-  features: [wifi, dishwasher, parking, washer, elevator, conditioner],
-  description,
-  photos
-];
+//   // местоположение в виде географических координат
+//   const opredelenieCoordinat = (location) => {
+//     const lat = getRandomArbitraryFloat(locations.MINIMAL_LATS, locations.MAXIMUM_LATS, DECIMAL_PLACE);
+//     const lng = getRandomArbitraryFloat(locations.MINIMAL_LNGS, locations.MAXIMUM_LNGS, DECIMAL_PLACE);
+//     return locations1.push(lat, lng);
+//   }
 
 
+//   return {
+//     author: avatar,
+//     offer: '',
+//     location: locations1,
+//   };
+// };
 
-const sozdanieMassiva = () => {
-  //описывает автора
-  const avatar = `img/avatars/user${getRandomArbitrary(START_ELEMNT, FINISH_ELEMNT)}.png`;
-
-  // местоположение в виде географических координат
-  const opredelenieCoordinat = (location) => {
-    const lat = getRandomArbitraryFloat(locations.MINIMAL_LATS, locations.MAXIMUM_LATS, DECIMAL_PLACE);
-    const lng = getRandomArbitraryFloat(locations.MINIMAL_LNGS, locations.MAXIMUM_LNGS, DECIMAL_PLACE);
-    location.push(lat, lng);
-  }
-
-
-  return {
-    author: avatar,
-    offer: '',
-    location: location,
-  };
-};
-
-console.log(sozdanieMassiva());
+// console.log(sozdanieMassiva());
