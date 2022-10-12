@@ -7,7 +7,7 @@ const getRandomArbitrary = (min, max) => {
   // округленное до ближайшего целого числа
   const result = Math.round(Math.random() * (max - min) + min);
   return result;
-}
+};
 
 
 // Функция, возвращающая случайное число с плавающей точкой
@@ -21,10 +21,20 @@ const getRandomArbitraryFloat = (min, max, floatDigits = 1) => {
   // Если нужно привести нечисловое значение к числовому типу, можно воспользоваться этой особенностью и применить к нему унарный оператор "+"
   const result = Math.random() * (max - min) + min;
   return +result.toFixed(floatDigits);
-}
+};
+
+// получить десятичные разряды числа с плавающей запятой в Javascript
+// toString последние 0 удаляет, в нашем случае не подходит
+// const getPrecision = (value) => {
+//   const firstVariable = value.toString();
+//   const secondVariable = firstVariable.split('.');
+//   return secondVariable[1].length;
+// };
 
 
 export {
   getRandomArbitrary,  // возвращающает случайное целое число из переданного диапазона включительно
-  getRandomArbitraryFloat  // возвращающая случайное число с плавающей точкой из переданного диапазона включительно
-}
+  getRandomArbitraryFloat,  // возвращающая случайное число с плавающей точкой из переданного диапазона включительно
+  getPrecision  // количество знаков после запятой
+
+};
