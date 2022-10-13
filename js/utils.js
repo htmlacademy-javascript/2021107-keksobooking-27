@@ -23,6 +23,9 @@ const getRandomArbitraryFloat = (min, max, floatDigits = 1) => {
   return +result.toFixed(floatDigits);
 };
 
+// Функция выбора случайного элемента из массива
+const getRandomArrayElement = (array) => array[getRandomArbitrary(0, array.length - 1)];
+
 // получить десятичные разряды числа с плавающей запятой в Javascript
 // toString последние 0 удаляет, в нашем случае не подходит
 // const getPrecision = (value) => {
@@ -34,6 +37,7 @@ const getRandomArbitraryFloat = (min, max, floatDigits = 1) => {
 
 export {
   getRandomArbitrary,// возвращающает случайное целое число из переданного диапазона включительно
-  getRandomArbitraryFloat // возвращающая случайное число с плавающей точкой из переданного диапазона включительно
+  getRandomArbitraryFloat, // возвращающая случайное число с плавающей точкой из переданного диапазона включительно
+  getRandomArrayElement // Функция выбора случайного элемента из массива
 
 };
