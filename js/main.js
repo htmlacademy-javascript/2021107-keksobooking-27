@@ -1,4 +1,4 @@
-import {getRandomArbitrary, getRandomArbitraryFloat} from './utils.js';
+import { getRandomArbitrary, getRandomArbitraryFloat } from './utils.js';
 
 const START_ELEMNT = 1;
 const FINISH_ELEMNT = 10;
@@ -30,6 +30,13 @@ const locations = {
 // описывает автора
 const getAuthorCreating = () => ({
   avatar: `img/avatars/user${getRandomArbitrary(START_ELEMNT, FINISH_ELEMNT).toString().padStart(2, 0)}.png`,
+});
+
+
+// местоположение в виде географических координат
+const getLocationCreating = () => ({
+  lat: getRandomArbitraryFloat(locations.MINIMAL_LATS, locations.MAXIMUM_LATS, locations.DECIMAL_PLACE),
+  lng: getRandomArbitraryFloat(locations.MINIMAL_LNGS, locations.MAXIMUM_LNGS, locations.DECIMAL_PLACE),
 });
 
 
