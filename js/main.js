@@ -18,9 +18,11 @@ const checkins = ['12:00', '13:00', '14:00'];
 const checkouts = ['12:00', '13:00', '14:00'];
 const listFeatures = ['wifi', 'dishwasher', 'parking', 'washer', 'elevator', 'conditioner'];
 const descriptions = ['Большое опмещение', 'Красивое помещение', 'Уютоне помещение', 'классное помещение', 'Дешёвое помещение'];
-const listPhotos = ['https://assets.htmlacademy.ru/content/intensive/javascript-1/keksobooking/duonguyen-8LrGtIxxa4w.jpg',
-                    'https://assets.htmlacademy.ru/content/intensive/javascript-1/keksobooking/brandon-hoogenboom-SNxQGWxZQi0.jpg',
-                    'https://assets.htmlacademy.ru/content/intensive/javascript-1/keksobooking/claire-rendall-b6kAwr1i0Iw.jpg'];
+const listPhotos = [
+  'https://assets.htmlacademy.ru/content/intensive/javascript-1/keksobooking/duonguyen-8LrGtIxxa4w.jpg',
+  'https://assets.htmlacademy.ru/content/intensive/javascript-1/keksobooking/brandon-hoogenboom-SNxQGWxZQi0.jpg',
+  'https://assets.htmlacademy.ru/content/intensive/javascript-1/keksobooking/claire-rendall-b6kAwr1i0Iw.jpg'
+];
 
 
 // описывает автора
@@ -29,15 +31,23 @@ const getAuthorCreating = () => ({
 });
 
 // местоположение в виде географических координат
+// При закоментированной реализации координаты всёравно не совпадают в getLocationCreating и getInformationMessage -> address
 const getLocationCreating = () => ({
   lat: getRandomArbitraryFloat(locations.MINIMAL_LATITUDE, locations.MAXIMUM_LATITUDE, locations.DECIMAL_PLACE),
   lng: getRandomArbitraryFloat(locations.MINIMAL_LONGITUDE, locations.MAXIMUM_LONGITUDE, locations.DECIMAL_PLACE),
 });
+// const getRandomLatitude = () => getRandomArbitraryFloat(locations.MINIMAL_LATITUDE, locations.MAXIMUM_LATITUDE, locations.DECIMAL_PLACE);
+// const getRandomLongitude = () => getRandomArbitraryFloat(locations.MINIMAL_LONGITUDE, locations.MAXIMUM_LONGITUDE, locations.DECIMAL_PLACE);
+// const getLocationCreating = () => ({
+//   lat: getRandomLatitude(),
+//   lng: getRandomLongitude(),
+// });
 
 // объект — содержит информацию об объявлении
 const getInformationMessage = () => ({
   title: getRandomArrayElement(titles),
-  address: `${getLocationCreating.lat}, ${getLocationCreating.lng}`,
+  address: `${getLocationCreating().lat}, ${getLocationCreating().lng}`,
+  // address: `${getRandomLatitude()}, ${getRandomLongitude()}`,
   price: getRandomArbitrary(1, RANDOM_NUMBER),
   type: getRandomArrayElement(types),
   rooms: getRandomArbitrary(1, RANDOM_NUMBER),
@@ -49,8 +59,8 @@ const getInformationMessage = () => ({
   description: getRandomArrayElement(descriptions),
   // {length: getRandomArbitrary(0, 10)} - длинна массива (количество элемнтов в массиве)
   // () => getRandomArrayElement(listPhotos) - подставляем каждый раз случайный элемент из массива listPhotos
-  photos: Array.from({length: getRandomArbitrary(0, 10)}, () => getRandomArrayElement(listPhotos)),
-})
+  photos: Array.from({ length: getRandomArbitrary(0, 10) }, () => getRandomArrayElement(listPhotos)),
+});
 
 // Итоговый элемент со всеми значениями
 const createTicket = () => ({
@@ -60,27 +70,8 @@ const createTicket = () => ({
 });
 
 // Генерация нужного количества элементов
-const createTicets = () =>
-  Array.from({ length: FINISH_ELEMNT},);
+const getTicets = () =>
+// _ - нижнее подчёркивание показывает что мы не используем элемент
+  Array.from({ length: FINISH_ELEMNT }, (_, ticetsIndex) => createTicket(ticetsIndex + 1));
 
-
-// const sozdanieMassiva = () => {
-//   //описывает автора
-//   const avatar = `img/avatars/user${getRandomArbitrary(START_ELEMNT, FINISH_ELEMNT)}.png`;
-
-//   // местоположение в виде географических координат
-//   const opredelenieCoordinat = (location) => {
-//     const lat = getRandomArbitraryFloat(locations.MINIMAL_LATS, locations.MAXIMUM_LATS, DECIMAL_PLACE);
-//     const lng = getRandomArbitraryFloat(locations.MINIMAL_LNGS, locations.MAXIMUM_LNGS, DECIMAL_PLACE);
-//     return locations1.push(lat, lng);
-//   }
-
-
-//   return {
-//     author: avatar,
-//     offer: '',
-//     location: locations1,
-//   };
-// };
-
-// console.log(sozdanieMassiva());
+getTicets();
