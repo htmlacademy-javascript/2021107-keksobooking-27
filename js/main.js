@@ -1,63 +1,77 @@
-// https://developer.mozilla.org/ru/docs/Web/JavaScript/Reference/Global_Objects/Math/random#получение_случайного_числа_в_заданном_интервале
-function getRandomArbitrary(min, max) {
+import { getRandomArbitrary, getRandomArbitraryFloat, getRandomArrayElement } from './utils.js';
 
-  // проверка на правильность исходных данных
-  if (min < 0 || max < 0 || typeof min === !Number || typeof max === !Number) { return NaN; }
-  else if (min >= max) { return 'Минимальное число (min) больше максимального (max)!!!'; }
+const START_ELEMNT = 1;
+const FINISH_ELEMNT = 10;
+const RANDOM_NUMBER = 99;
 
-  // округленное до ближайшего целого числа
-  return Math.round(Math.random() * (max - min) + min);
-}
+const locations = {
+  MINIMAL_LATITUDE: 35.65000,
+  MAXIMUM_LATITUDE: 35.70000,
+  MINIMAL_LONGITUDE: 139.70000,
+  MAXIMUM_LONGITUDE: 139.80000,
+  DECIMAL_PLACE: 5
+};
 
-
-// Функция, возвращающая случайное число с плавающей точкой
-
-
-// floatDigits = 1 - значение по умолчанию
-function getRandomArbitraryFloat(min, max, floatDigits = 1) {
-
-  // проверка на правильность исходных данных
-  if (min < 0 || max < 0 || floatDigits < 0 || typeof min === !Number || typeof max === !Number || typeof floatDigits === !Number) { return NaN; }
-  else if (min >= max) { return 'Минимальное число (min) больше максимального (max)!!!'; }
-  // else if (typeof floatDigits === !Number) { return 'Некорректный тип данных в функции-getRandomArbitraryFloat аргумент-floatDigits'; }
-
-  // .toFixed() обрезает знаки после запятой и возращает СТРОКУ!!!
-  // Если нужно привести нечисловое значение к числовому типу, можно воспользоваться этой особенностью и применить к нему унарный оператор "+"
-  return +((Math.random() * (max - min) + min).toFixed(floatDigits));
-}
-
-// Чтобы ESLint не ругался на неиспользуемые функции, временно вызовите их по одному разу после объявления.
-getRandomArbitrary(0, 7);
-getRandomArbitraryFloat(0, 7, 4);
+const titles = ['Квартира на час', 'Квартира на неделю', 'Квартира на месяц', 'Квартира на год', 'Домик на час', 'Домик на день', 'Домик на неделю', 'Домик на месяц'];
+const types = ['palace', 'flat', 'house', 'bungalow', 'hotel'];
+const checkins = ['12:00', '13:00', '14:00'];
+const checkouts = ['12:00', '13:00', '14:00'];
+const listFeatures = ['wifi', 'dishwasher', 'parking', 'washer', 'elevator', 'conditioner'];
+const descriptions = ['Большое опмещение', 'Красивое помещение', 'Уютоне помещение', 'классное помещение', 'Дешёвое помещение'];
+const listPhotos = [
+  'https://assets.htmlacademy.ru/content/intensive/javascript-1/keksobooking/duonguyen-8LrGtIxxa4w.jpg',
+  'https://assets.htmlacademy.ru/content/intensive/javascript-1/keksobooking/brandon-hoogenboom-SNxQGWxZQi0.jpg',
+  'https://assets.htmlacademy.ru/content/intensive/javascript-1/keksobooking/claire-rendall-b6kAwr1i0Iw.jpg'
+];
 
 
-// 1) Функция, возвращающая случайное целое число из переданного диапазона включительно
+// описывает автора
+const getAuthorCreating = () => ({
+  avatar: `img/avatars/user${getRandomArbitrary(START_ELEMNT, FINISH_ELEMNT).toString().padStart(2, 0)}.png`,
+});
 
-// function getRandomArbitrary(min, max) {
-//   return Math.random() * (max - min) + min;
-// }
+// местоположение в виде географических координат
+// При закоментированной реализации координаты всёравно не совпадают в getLocationCreating и getInformationMessage -> address
+const getLocationCreating = () => ({
+  lat: getRandomArbitraryFloat(locations.MINIMAL_LATITUDE, locations.MAXIMUM_LATITUDE, locations.DECIMAL_PLACE),
+  lng: getRandomArbitraryFloat(locations.MINIMAL_LONGITUDE, locations.MAXIMUM_LONGITUDE, locations.DECIMAL_PLACE),
+});
+// const getRandomLatitude = () => getRandomArbitraryFloat(locations.MINIMAL_LATITUDE, locations.MAXIMUM_LATITUDE, locations.DECIMAL_PLACE);
+// const getRandomLongitude = () => getRandomArbitraryFloat(locations.MINIMAL_LONGITUDE, locations.MAXIMUM_LONGITUDE, locations.DECIMAL_PLACE);
+// const getLocationCreating = () => ({
+//   lat: getRandomLatitude(),
+//   lng: getRandomLongitude(),
+// });
 
-// 2) функции могут быть только положительные числа и ноль.Если функции пришли неправильные аргументы, она должна вернуть NaN
+// объект — содержит информацию об объявлении
+const getInformationMessage = () => ({
+  title: getRandomArrayElement(titles),
+  address: `${getLocationCreating().lat}, ${getLocationCreating().lng}`,
+  // address: `${getRandomLatitude()}, ${getRandomLongitude()}`,
+  price: getRandomArbitrary(1, RANDOM_NUMBER),
+  type: getRandomArrayElement(types),
+  rooms: getRandomArbitrary(1, RANDOM_NUMBER),
+  guests: getRandomArbitrary(1, RANDOM_NUMBER),
+  checkin: getRandomArrayElement(checkins),
+  checkout: getRandomArrayElement(checkouts),
+  // .slice(0, ххх) - создаёт масссив из listFeatures; 0 - начальный эл-т, ххх - конечный эл-т (не включая его)
+  features: listFeatures.slice(0, getRandomArbitrary(0, listFeatures.length)),
+  description: getRandomArrayElement(descriptions),
+  // {length: getRandomArbitrary(0, 10)} - длинна массива (количество элемнтов в массиве)
+  // () => getRandomArrayElement(listPhotos) - подставляем каждый раз случайный элемент из массива listPhotos
+  photos: Array.from({ length: getRandomArbitrary(0, 10) }, () => getRandomArrayElement(listPhotos)),
+});
 
-// if (min < 0 || max < 0 || typeof min === !Number || typeof max === !Number) { return NaN }
+// Итоговый элемент со всеми значениями
+const createTicket = () => ({
+  author: getAuthorCreating(),
+  offer: getInformationMessage(),
+  location: getLocationCreating(),
+});
 
-// // проверка на число не работает
+// Генерация нужного количества элементов
+const getTicets = () =>
+// _ - нижнее подчёркивание показывает что мы не используем элемент
+  Array.from({ length: FINISH_ELEMNT }, (_, ticetsIndex) => createTicket(ticetsIndex + 1));
 
-// 3) передать значение «до» меньшее, чем значение «от», или равное ему
-
-// if (min >= max) { return 'Минимальное число (min) больше максимального (max)!!!' }
-
-// 4) округленное до ближайшего целого числа
-
-// Math.round()
-
-// 5) Функция, возвращающая случайное число с плавающей точкой
-
-// Как отформатировать число с плавающей запятой в javascript? - https://stackoverflow.com/questions/661562/how-to-format-a-float-in-javascript
-// использование toFixed
-
-// (Math.random() * (max - min) + min).toFixed(floatDigits)
-
-// 6) Если нужно привести нечисловое значение к числовому типу, можно воспользоваться этой особенностью и применить к нему унарный оператор +
-
-// +((Math.random() * (max - min) + min).toFixed(floatDigits))
+getTicets();
