@@ -10,7 +10,7 @@ const typeOfHousing = {
 };
 
 // деструктуризация см. вышу константу
-const {flat, bungalow, house, palace, hotel} = typeOfHousing;
+const { flat, bungalow, house, palace, hotel } = typeOfHousing;
 
 // тип жилья сопоставив с подписями
 const sortingHousing = (typeHouse) => {
@@ -44,8 +44,27 @@ const similarListFragment = document.createDocumentFragment();
 // функция создающая генерации разметки похожих объявлений на основе данных
 // для wizard потом надо будет используем деструктуризацию параметров
 similarTicets.forEach((wizard) => {
+
   // клонирую <article class="popup"> со всем содержимым
   const ticetElement = patternCardSticker.cloneNode(true);
+
+  // переменные для вывода список .popup__features
+  const features = ticetElement.querySelector('.popup__features');
+  const feature = features.querySelectorAll('.popup__feature');
+  // массив котрый нужен нам
+  const listFeature = wizard.offer.features;
+
+  // для: В список .popup__features выведите все доступные удобства в объявлении
+  const removingUnnecessaryElements = (array) => {
+    array.forEach((arrayItem) => {
+      const isNecessary = listFeature.some(
+        (userFeature) => arrayItem.classList.contains('popup__feature--' + userFeature), // `popup__feature-- + ${userFeature}`
+      );
+      if (!isNecessary) {
+        arrayItem.remove();
+      }
+    });
+  };
 
   // Выведите заголовок объявления offer.title в заголовок .popup__title.
   ticetElement.querySelector('.popup__title').textContent = wizard.offer.title;
@@ -55,9 +74,9 @@ similarTicets.forEach((wizard) => {
   // необходимо добавить проверку на слова
   ticetElement.querySelector('.popup__text--capacity').textContent = `${wizard.offer.rooms} комнаты для ${wizard.offer.guests} гостей`;
   ticetElement.querySelector('.popup__text--time').textContent = `Заезд после ${wizard.offer.checkin}, выезд до ${wizard.offer.checkout}`;
-  // ticetElement.querySelector('.popup__features').textContent = sortingHousing(wizard.offer.type);
+  removingUnnecessaryElements(feature); // добавление доступные удобства(features) в объявлении
   ticetElement.querySelector('.popup__description').textContent = wizard.offer.description;
-  // ticetElement.querySelector('.popup__photos').textContent = wizard.offer.description;
+  ticetElement.querySelector('.popup__photos').querySelector('img').src = wizard.offer.photos; // не отображаются фотографии
   ticetElement.querySelector('.popup__avatar').src = wizard.author.avatar;
   similarListFragment.append(ticetElement);
 });
@@ -65,6 +84,10 @@ similarTicets.forEach((wizard) => {
 // используем append вместо appendChild
 mapBlock.append(similarListFragment);
 
-// В список .popup__features выведите все доступные удобства в объявлении.
-
-// В блок .popup__photos выведите все фотографии из списка offer.photos. Каждая из строк массива photos должна записываться как атрибут src соответствующего изображения.
+// вывод только первой карточки
+const deletedElement = mapBlock.querySelectorAll('.popup');
+for (let i = 0; i < deletedElement.length; i++) {
+  if (i > 0) {
+    mapBlock.removeChild(deletedElement[i]);
+  }
+}
