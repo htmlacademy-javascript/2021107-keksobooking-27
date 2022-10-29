@@ -28,9 +28,16 @@ const sortingHousing = (typeHouse) => {
   }
 };
 
+// функция удаления ненужных удобств(features) в объявлении
+const removingUnnecessaryElements = (fullArray, needArray) => {
+  fullArray.forEach((arrayItem) => {
+    // У второго класса(classList[1]) заменяем(popup__feature--) на пустоту('') и сравниваем с нужным массивом, если нет совпадения удаляем сам элемент
+    if (needArray.indexOf(arrayItem.classList[1].replace('popup__feature--', '')) === -1) { arrayItem.remove(); }
+  });
+};
+
 // Временный блок для вставки карточки
 const mapBlock = document.querySelector('#map-canvas');
-// console.log(mapBlock);
 // находим шаблон id="card" и в нём контейнер <article class="popup">
 const patternCardSticker = document.querySelector('#card').content.querySelector('.popup');
 
@@ -51,20 +58,9 @@ similarTicets.forEach((wizard) => {
   // переменные для вывода список .popup__features
   const features = ticetElement.querySelector('.popup__features');
   const feature = features.querySelectorAll('.popup__feature');
-  // массив котрый нужен нам
+  // массив features котрый нужен нам
   const listFeature = wizard.offer.features;
 
-  // для: В список .popup__features выведите все доступные удобства в объявлении
-  const removingUnnecessaryElements = (array) => {
-    array.forEach((arrayItem) => {
-      const isNecessary = listFeature.some(
-        (userFeature) => arrayItem.classList.contains('popup__feature--' + userFeature), // `popup__feature-- + ${userFeature}`
-      );
-      if (!isNecessary) {
-        arrayItem.remove();
-      }
-    });
-  };
 
   // Выведите заголовок объявления offer.title в заголовок .popup__title.
   ticetElement.querySelector('.popup__title').textContent = wizard.offer.title;
@@ -74,10 +70,35 @@ similarTicets.forEach((wizard) => {
   // необходимо добавить проверку на слова
   ticetElement.querySelector('.popup__text--capacity').textContent = `${wizard.offer.rooms} комнаты для ${wizard.offer.guests} гостей`;
   ticetElement.querySelector('.popup__text--time').textContent = `Заезд после ${wizard.offer.checkin}, выезд до ${wizard.offer.checkout}`;
-  removingUnnecessaryElements(feature); // добавление доступные удобства(features) в объявлении
+  removingUnnecessaryElements(feature, listFeature); // добавление доступные удобства(features) в объявлении
   ticetElement.querySelector('.popup__description').textContent = wizard.offer.description;
-  ticetElement.querySelector('.popup__photos').querySelector('img').src = wizard.offer.photos; // не отображаются фотографии
+  // ticetElement.querySelector('.popup__photos').querySelector('img').src = wizard.offer.photos; // не отображаются фотографии
+  //
+
+
+  const renderImage = (container, needArray) => {
+    const element = container.querySelector('img');
+    container.innerHTML = '';
+
+    // Создаём "коробочку" что-бы сгруппировать однотипные или разнотипные элементы и вставить потом их все вместе
+    const fragmentPhoto = document.createDocumentFragment();
+
+    needArray.forEach((item) => {
+      const newPhoto = element.cloneNode(true);
+      // console.log(newPhoto);
+      newPhoto.src = item;
+      fragmentPhoto.append(newPhoto);
+    });
+    // console.log(fragmentPhoto);
+    return fragmentPhoto;
+  };
+
+  // надо к родителю добавить получившиеся элементы
+  ticetElement.querySelector('.popup__photos').append(renderImage(ticetElement.querySelector('.popup__photos'), wizard.offer.photos));
+
+
   ticetElement.querySelector('.popup__avatar').src = wizard.author.avatar;
+
   similarListFragment.append(ticetElement);
 });
 

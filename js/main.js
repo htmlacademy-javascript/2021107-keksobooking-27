@@ -1,4 +1,4 @@
 import { getTicets } from './data.js';
-import './popup.js';
+import './offer-card.js';
 
 getTicets();
