@@ -16,7 +16,7 @@ const types = ['palace', 'flat', 'house', 'bungalow', 'hotel'];
 const checkins = ['12:00', '13:00', '14:00'];
 const checkouts = ['12:00', '13:00', '14:00'];
 const listFeatures = ['wifi', 'dishwasher', 'parking', 'washer', 'elevator', 'conditioner'];
-const descriptions = ['Большое опмещение', 'Красивое помещение', 'Уютоне помещение', 'классное помещение', 'Дешёвое помещение'];
+const descriptions = ['Большое помещение', 'Красивое помещение', 'Уютоне помещение', 'классное помещение', 'Дешёвое помещение'];
 const listPhotos = [
   'https://assets.htmlacademy.ru/content/intensive/javascript-1/keksobooking/duonguyen-8LrGtIxxa4w.jpg',
   'https://assets.htmlacademy.ru/content/intensive/javascript-1/keksobooking/brandon-hoogenboom-SNxQGWxZQi0.jpg',
@@ -41,7 +41,6 @@ const getLocationCreating = () => ({
 const getInformationMessage = () => ({
   title: getRandomArrayElement(titles),
   address: `${getLocationCreating().lat}, ${getLocationCreating().lng}`,
-  // address: `${getRandomLatitude()}, ${getRandomLongitude()}`,
   price: getRandomArbitrary(1, RANDOM_NUMBER),
   type: getRandomArrayElement(types),
   rooms: getRandomArbitrary(1, RANDOM_NUMBER),
@@ -71,3 +70,4 @@ const getTicets = () =>
 export {
   getTicets,// функции для создания массива из 10 сгенерированных JS-объектов
 };
+

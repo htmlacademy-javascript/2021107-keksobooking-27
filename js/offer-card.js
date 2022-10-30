@@ -14,7 +14,7 @@ const typeOfHousing = {
 // деструктуризация см. вышу константу
 const { flat, bungalow, house, palace, hotel } = typeOfHousing;
 
-// тип жилья сопоставив с подписями
+// тип жилья сопоставляем с подписями offer.type
 const sortingHousing = (typeHouse) => {
   switch (typeHouse) {
     case 'flat':
@@ -62,57 +62,95 @@ const mapBlock = document.querySelector('#map-canvas');
 // находим шаблон id="card" и в нём контейнер <article class="popup">
 const patternCardSticker = document.querySelector('#card').content.querySelector('.popup');
 
-// передаём импортированную функцию  в константу
-const similarTicets = getTicets();
-// console.log(getTicets()[0]);
 
-// Создаём "коробочку" что-бы сгруппировать однотипные или разнотипные элементы и вставить потом их все вместе
-const similarListFragment = document.createDocumentFragment();
-
-// функция создающая генерации разметки похожих объявлений на основе данных
-// для wizard потом надо будет используем деструктуризацию параметров
-similarTicets.forEach((wizard) => {
-
-  // добавлена для удобства, для короче запись
-  const word = WORDS_FOR_DECLENSIONS;
-
+const renderCard = ({ author, offer }) => { //используем деструктуризацию вместо getTicets()[0].author пишем просто author и т.п.(важен порядок присваивания наименования)
   // клонирую <article class="popup"> со всем содержимым
   const ticetElement = patternCardSticker.cloneNode(true);
 
-  // переменные для вывода список .popup__features
-  const features = ticetElement.querySelector('.popup__features');
-  const feature = features.querySelectorAll('.popup__feature');
-  // массив features котрый нужен нам
-  const listFeature = wizard.offer.features;
+  // добавлена для удобства, для короче запись Слов для склонения
+  const word = WORDS_FOR_DECLENSIONS;
 
-  // родитель для фотографий помещения
-  const containerPhoto = ticetElement.querySelector('.popup__photos');
-
-
-  // Выведите заголовок объявления offer.title в заголовок .popup__title.
-  ticetElement.querySelector('.popup__title').textContent = wizard.offer.title;
-  ticetElement.querySelector('.popup__text--address').textContent = wizard.offer.address;
-  ticetElement.querySelector('.popup__text--price').textContent = `${wizard.offer.price}  ₽/ночь`;
-  ticetElement.querySelector('.popup__type').textContent = sortingHousing(wizard.offer.type);
-  // происходит проверка на склонение слова
-  ticetElement.querySelector('.popup__text--capacity').textContent = `${wizard.offer.rooms} ${numDecline(wizard.offer.rooms, word[0], word[1], word[2])} для ${wizard.offer.guests} ${numDecline(wizard.offer.guests, word[3], word[4], word[5])}`;
-  ticetElement.querySelector('.popup__text--time').textContent = `Заезд после ${wizard.offer.checkin}, выезд до ${wizard.offer.checkout}`;
-  removingUnnecessaryElements(feature, listFeature); // добавление доступные удобства(features) в объявлении
-  ticetElement.querySelector('.popup__description').textContent = wizard.offer.description;
-  // надо к родителю добавить получившиеся элементы
-  containerPhoto.append(renderImage(containerPhoto, wizard.offer.photos));
-  ticetElement.querySelector('.popup__avatar').src = wizard.author.avatar;
-
-  similarListFragment.append(ticetElement);
-});
-
-// используем append вместо appendChild
-mapBlock.append(similarListFragment);
-
-// вывод только первой карточки
-const deletedElement = mapBlock.querySelectorAll('.popup');
-for (let i = 0; i < deletedElement.length; i++) {
-  if (i > 0) {
-    mapBlock.removeChild(deletedElement[i]);
+  const title = ticetElement.querySelector('.popup__title');
+  // Делаем проверку что есть данные для заполнения
+  if (offer.title) {
+    // Если данные есть вносим их
+    title.textContent = offer.title;
+  } else {
+    // если данных нет удаляем элемент из DOOM
+    title.remove();
   }
-}
+
+  const address = ticetElement.querySelector('.popup__text--address');
+  if (offer.address) {
+    address.textContent = offer.address;
+  } else {
+    address.remove();
+  }
+
+  const price = ticetElement.querySelector('.popup__text--price');
+  if (offer.price) {
+    price.textContent = `${offer.price}  ₽/ночь`;
+  } else {
+    price.remove();
+  }
+
+  const type = ticetElement.querySelector('.popup__type');
+  if (offer.type) {
+    type.textContent = sortingHousing(offer.type);
+  } else {
+    type.remove();
+  }
+
+  const capacity = ticetElement.querySelector('.popup__text--capacity');
+  if (offer.rooms && offer.guests) {
+    capacity.textContent =
+      // происходит проверка на склонение слова
+      `${offer.rooms} ${numDecline(offer.rooms, word[0], word[1], word[2])} для ${offer.guests} ${numDecline(offer.guests, word[3], word[4], word[5])}`;
+  } else {
+    capacity.remove();
+  }
+
+  const time = ticetElement.querySelector('.popup__text--time');
+  if (offer.checkin && offer.checkout) {
+    time.textContent = `Заезд после ${offer.checkin}, выезд до ${offer.checkout}`;
+  } else {
+    time.remove();
+  }
+
+  const features = ticetElement.querySelector('.popup__features');
+  // переменные для вывода список .popup__features
+  const feature = features.querySelectorAll('.popup__feature');
+  if (offer.features) {
+    removingUnnecessaryElements(feature, offer.features); // добавление доступных удобства(features) в объявлении
+  } else {
+    features.remove();
+  }
+
+  const description = ticetElement.querySelector('.popup__description');
+  if (offer.description) {
+    description.textContent = offer.description;
+  } else {
+    description.remove();
+  }
+
+  const photos = ticetElement.querySelector('.popup__photos');
+  if (offer.photos) {
+    // надо к родителю добавить получившиеся элементы
+    photos.append(renderImage(photos, offer.photos));
+  } else {
+    photos.remove();
+  }
+
+  const avatar = ticetElement.querySelector('.popup__avatar');
+  if (author.avatar) {
+    avatar.src = author.avatar;
+  } else {
+    avatar.remove();
+  }
+
+  return ticetElement;
+};
+
+// используем append вместо appendChild, выводим один элемент
+mapBlock.append(renderCard(getTicets()[0]));
+
