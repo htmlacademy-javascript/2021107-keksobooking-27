@@ -1,4 +1,6 @@
 import { getTicets } from './data.js';
+import { numDecline } from './utils.js';
+
 
 // тип жилья
 const typeOfHousing = {
@@ -28,6 +30,9 @@ const sortingHousing = (typeHouse) => {
   }
 };
 
+// Слова для склонения
+const WORDS_FOR_DECLENSIONS = ['комната', 'комнаты', 'комнат', 'гость', 'гостя', 'гостей'];
+
 // функция удаления ненужных удобств(features) в объявлении
 const removingUnnecessaryElements = (fullArray, needArray) => {
   fullArray.forEach((arrayItem) => {
@@ -35,6 +40,22 @@ const removingUnnecessaryElements = (fullArray, needArray) => {
     if (needArray.indexOf(arrayItem.classList[1].replace('popup__feature--', '')) === -1) { arrayItem.remove(); }
   });
 };
+
+// функция добавления фотографий в объявлении
+const renderImage = (container, needArray) => {
+  const element = container.querySelector('img');
+  container.innerHTML = '';
+  // Создаём "коробочку" что-бы сгруппировать однотипные или разнотипные элементы и вставить потом их все вместе
+  const fragmentPhoto = document.createDocumentFragment();
+
+  needArray.forEach((item) => {
+    const newPhoto = element.cloneNode(true);
+    newPhoto.src = item;
+    fragmentPhoto.append(newPhoto);
+  });
+  return fragmentPhoto;
+};
+
 
 // Временный блок для вставки карточки
 const mapBlock = document.querySelector('#map-canvas');
@@ -52,6 +73,9 @@ const similarListFragment = document.createDocumentFragment();
 // для wizard потом надо будет используем деструктуризацию параметров
 similarTicets.forEach((wizard) => {
 
+  // добавлена для удобства, для короче запись
+  const word = WORDS_FOR_DECLENSIONS;
+
   // клонирую <article class="popup"> со всем содержимым
   const ticetElement = patternCardSticker.cloneNode(true);
 
@@ -61,42 +85,22 @@ similarTicets.forEach((wizard) => {
   // массив features котрый нужен нам
   const listFeature = wizard.offer.features;
 
+  // родитель для фотографий помещения
+  const containerPhoto = ticetElement.querySelector('.popup__photos');
+
 
   // Выведите заголовок объявления offer.title в заголовок .popup__title.
   ticetElement.querySelector('.popup__title').textContent = wizard.offer.title;
   ticetElement.querySelector('.popup__text--address').textContent = wizard.offer.address;
   ticetElement.querySelector('.popup__text--price').textContent = `${wizard.offer.price}  ₽/ночь`;
   ticetElement.querySelector('.popup__type').textContent = sortingHousing(wizard.offer.type);
-  // необходимо добавить проверку на слова
-  ticetElement.querySelector('.popup__text--capacity').textContent = `${wizard.offer.rooms} комнаты для ${wizard.offer.guests} гостей`;
+  // происходит проверка на склонение слова
+  ticetElement.querySelector('.popup__text--capacity').textContent = `${wizard.offer.rooms} ${numDecline(wizard.offer.rooms, word[0], word[1], word[2])} для ${wizard.offer.guests} ${numDecline(wizard.offer.guests, word[3], word[4], word[5])}`;
   ticetElement.querySelector('.popup__text--time').textContent = `Заезд после ${wizard.offer.checkin}, выезд до ${wizard.offer.checkout}`;
   removingUnnecessaryElements(feature, listFeature); // добавление доступные удобства(features) в объявлении
   ticetElement.querySelector('.popup__description').textContent = wizard.offer.description;
-  // ticetElement.querySelector('.popup__photos').querySelector('img').src = wizard.offer.photos; // не отображаются фотографии
-  //
-
-
-  const renderImage = (container, needArray) => {
-    const element = container.querySelector('img');
-    container.innerHTML = '';
-
-    // Создаём "коробочку" что-бы сгруппировать однотипные или разнотипные элементы и вставить потом их все вместе
-    const fragmentPhoto = document.createDocumentFragment();
-
-    needArray.forEach((item) => {
-      const newPhoto = element.cloneNode(true);
-      // console.log(newPhoto);
-      newPhoto.src = item;
-      fragmentPhoto.append(newPhoto);
-    });
-    // console.log(fragmentPhoto);
-    return fragmentPhoto;
-  };
-
   // надо к родителю добавить получившиеся элементы
-  ticetElement.querySelector('.popup__photos').append(renderImage(ticetElement.querySelector('.popup__photos'), wizard.offer.photos));
-
-
+  containerPhoto.append(renderImage(containerPhoto, wizard.offer.photos));
   ticetElement.querySelector('.popup__avatar').src = wizard.author.avatar;
 
   similarListFragment.append(ticetElement);
