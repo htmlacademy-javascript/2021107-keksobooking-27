@@ -1,3 +1,5 @@
-import { getTicets } from './data.js';
+import './offer-card.js';
+import { disablingForm } from './form.js';
 
-getTicets();
+// выключаем форму
+disablingForm();

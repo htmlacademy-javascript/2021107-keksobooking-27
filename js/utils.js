@@ -26,18 +26,24 @@ const getRandomArbitraryFloat = (min, max, floatDigits = 1) => {
 // Функция выбора случайного элемента из массива
 const getRandomArrayElement = (array) => array[getRandomArbitrary(0, array.length - 1)];
 
-// получить десятичные разряды числа с плавающей запятой в Javascript
-// toString последние 0 удаляет, в нашем случае не подходит
-// const getPrecision = (value) => {
-//   const firstVariable = value.toString();
-//   const secondVariable = firstVariable.split('.');
-//   return secondVariable[1].length;
-// };
+// Функция выбирает прваильное склонени существительного после чмслительного
+const numDecline = (num, nominative, genitiveSingular, genitivePlural) => {
+  if(num > 10 && (Math.round((num % 100) / 10)) === 1) {
+    return genitivePlural;
+  }
+  switch(num % 10){
+    case 1: return nominative;
+    case 2:
+    case 3:
+    case 4: return genitiveSingular;
+  }
+  return genitivePlural;
+};
 
 
 export {
   getRandomArbitrary,// возвращающает случайное целое число из переданного диапазона включительно
   getRandomArbitraryFloat, // возвращающая случайное число с плавающей точкой из переданного диапазона включительно
-  getRandomArrayElement // Функция выбора случайного элемента из массива
-
+  getRandomArrayElement, // Функция выбора случайного элемента из массива
+  numDecline // прваильное склонени существительного после чмслительного
 };
