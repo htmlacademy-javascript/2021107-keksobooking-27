@@ -9,7 +9,8 @@ const disablingForm = (teg) => {
   teg.classList.add(`${teg.classList}--disabled`); // arrayItem.classList[1].replace('popup__feature--', '')
 
   // Все интерактивные элементы формы должны быть заблокированы с помощью атрибута disabled
-  const fieldsets = teg.querySelectorAll('fieldset');
+  const fieldsets = teg.querySelectorAll('fieldset, select'); // выбираем теги fieldset и select
+  // const fieldsets = teg.children;
   // перебираем forEach и каждому fieldset с помощью setAttribute ставим атрибут disabled="disabled"
   fieldsets.forEach((fieldset) => {
     fieldset.setAttribute('disabled', 'disabled');
