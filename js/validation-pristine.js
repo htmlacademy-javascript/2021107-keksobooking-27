@@ -16,10 +16,44 @@ const GUESTS_IN_ROOM = {
   3: ['3']
 };
 
+const MIN_PRICE = {
+  'bungalow': 0,
+  'flat': 1000,
+  'hotel': 3000,
+  'house': 5000,
+  'palace': 10000
+};
 
 const adForm = document.querySelector('.ad-form'); // родитель форма form class="ad-form"
 const roomNumber = adForm.querySelector('#room_number'); // Количество комнат
 const capacity = adForm.querySelector('#capacity'); // Количество мест
+const type = adForm.querySelector('#type option:checked'); // Тип жилья
+const price = adForm.querySelector('#price'); // Цена за ночь
+
+// функция проверки
+const validateType = () => +price.value >= MIN_PRICE[type.value];
+// функция сообщения
+const getTypeErrorMessage = () => `Не меньше ${MIN_PRICE[type.value]} за ночь в ${type.textContent}.`;
+
+
+
+console.log(MIN_PRICE[type.value] + ' price');
+console.log(type.textContent + ' type');
+console.log(`Не меньше ${MIN_PRICE[type.value]} за ночь в ${type.textContent}.`);
+
+// pristine.addValidator(type);
+
+// function validateAmount (value) {
+//   const unit = orderForm.querySelector('[name="unit"]:checked');
+//   return value.length && parseInt(value) <= maxAmount[unit.value];
+// }
+
+// function getAmountErrorMessage () {
+//   const unit = orderForm.querySelector('[name="unit"]:checked');
+//   return `Не больше ${maxAmount[unit.value]} штук в одни руки`;
+// }
+
+// pristine.addValidator(amountField, validateAmount, getAmountErrorMessage);
 
 // Функция простой валидации
 const pristine = new Pristine(adForm, {
