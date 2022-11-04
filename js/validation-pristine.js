@@ -121,6 +121,68 @@ const onTypeChange = () => {
 type.addEventListener('change', chekingTypeValue); // подстановка в placeholder по нажатию
 type.addEventListener('change', onTypeChange);
 
+// **************************Валидация: «Время заезда» - «Время выезда»*********************
+
+const timein = adForm.querySelector('[name="timein"]');
+const timeout = adForm.querySelector('[name="timeout"]');
+const timeOption = {
+  '12:00': '12:00',
+  '13:00': '13:00',
+  '14:00': '14:00'
+};
+
+//  если по выбранному Время заезда совпадает Время выезда — то true
+const validateTime = () => timeOption[timein.value].includes(timeout.value);
+
+// функция сообщения Заезд должно быть до Время заезда
+const getTimeInErrorMessage = () => `Время заезда должно быть позже ${timeout.value}.`;
+const getTimeOutErrorMessage = () => `Время выезда должно быть раньше ${timein.value}.`;
+
+//  ошибку нужно показать на обоих выпадающих списках; не важно, что первым выбрал пользователь
+pristine.addValidator(timein, validateTime, getTimeInErrorMessage);
+pristine.addValidator(timeout, validateTime, getTimeOutErrorMessage);
+
+// const chekingTime = (standartTime, replacementTime) => {
+//   Object.keys(timeOption).forEach((item) => {
+//     if (standartTime.value === item && standartTime.value !== replacementTime.value) {
+//       const select = timeout.getElementsByTagName('option');
+//       for (let i = 0; i < select.length; i++) {
+//         if (select[i].value === item) { select[i].selected = true; }
+//       }
+//     }
+//   });
+// };
+
+// const chekingTimeIn = chekingTime(timein, timeout);
+// const chekingTimeOut = chekingTime(timeout, timein);
+
+const chekingTimeIn = () => {
+  Object.keys(timeOption).forEach((item) => {
+    if (timein.value === item && timein.value !== timeout.value) {
+      const select = timeout.getElementsByTagName('option');
+      for (let i = 0; i < select.length; i++) {
+        if (select[i].value === item) { select[i].selected = true; }
+      }
+    }
+  });
+};
+
+const chekingTimeOut = () => {
+  Object.keys(timeOption).forEach((item) => {
+    if (timeout.value === item && timeout.value !== timein.value) {
+      const select = timeout.getElementsByTagName('option');
+      for (let i = 0; i < select.length; i++) {
+        if (select[i].value === item) { select[i].selected = true; }
+      }
+    }
+  });
+};
+
+
+timein.addEventListener('change', chekingTimeIn); // подстановка timein в timeout
+timeout.addEventListener('change', chekingTimeOut); // подстановка timeout в timein
+
+
 // ******* ******************************общий вызов*************************************
 adForm.addEventListener('submit', (evt) => {
   evt.preventDefault(); // отменяется нажатие кнопки
