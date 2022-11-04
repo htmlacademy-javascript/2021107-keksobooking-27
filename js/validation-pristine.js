@@ -24,12 +24,21 @@ const MIN_PRICE = {
   'palace': 10000
 };
 
+const TIME_OPTION = {
+  '12:00': '12:00',
+  '13:00': '13:00',
+  '14:00': '14:00'
+};
+
+
 const adForm = document.querySelector('.ad-form'); // родитель форма form class="ad-form"
 const roomNumber = adForm.querySelector('#room_number'); // Количество комнат
 const capacity = adForm.querySelector('#capacity'); // Количество мест
 // const type = adForm.querySelector('#type option:checked'); // Тип жилья
 const type = adForm.querySelector('#type'); // Тип жилья
 const price = adForm.querySelector('#price'); // Цена за ночь
+const timein = adForm.querySelector('[name="timein"]');
+const timeout = adForm.querySelector('[name="timeout"]');
 
 
 // Функция простой валидации
@@ -122,30 +131,10 @@ type.addEventListener('change', chekingTypeValue); // подстановка в 
 type.addEventListener('change', onTypeChange);
 
 // **************************Валидация: «Время заезда» - «Время выезда»*********************
-
-const timein = adForm.querySelector('[name="timein"]');
-const timeout = adForm.querySelector('[name="timeout"]');
-const timeOption = {
-  '12:00': '12:00',
-  '13:00': '13:00',
-  '14:00': '14:00'
-};
-
-//  если по выбранному Время заезда совпадает Время выезда — то true
-const validateTime = () => timeOption[timein.value].includes(timeout.value);
-
-// функция сообщения Заезд должно быть до Время заезда
-const getTimeInErrorMessage = () => `Время заезда должно быть позже ${timeout.value}.`;
-const getTimeOutErrorMessage = () => `Время выезда должно быть раньше ${timein.value}.`;
-
-//  ошибку нужно показать на обоих выпадающих списках; не важно, что первым выбрал пользователь
-pristine.addValidator(timein, validateTime, getTimeInErrorMessage);
-pristine.addValidator(timeout, validateTime, getTimeOutErrorMessage);
-
-// const chekingTime = (standartTime, replacementTime) => {
-//   Object.keys(timeOption).forEach((item) => {
-//     if (standartTime.value === item && standartTime.value !== replacementTime.value) {
-//       const select = timeout.getElementsByTagName('option');
+// const chekingTime = (standart, replacement) => {
+//   Object.keys(TIME_OPTION).forEach((item) => {
+//     if (standart.value === item && item !== replacement.value) {
+//       const select = replacement.getElementsByTagName('option');
 //       for (let i = 0; i < select.length; i++) {
 //         if (select[i].value === item) { select[i].selected = true; }
 //       }
@@ -156,11 +145,18 @@ pristine.addValidator(timeout, validateTime, getTimeOutErrorMessage);
 // const chekingTimeIn = chekingTime(timein, timeout);
 // const chekingTimeOut = chekingTime(timeout, timein);
 
+// timein.addEventListener('change', chekingTimeIn); // подстановка timein в timeout
+// timeout.addEventListener('change', chekingTimeOut); // подстановка timeout в timein
+
+
 const chekingTimeIn = () => {
-  Object.keys(timeOption).forEach((item) => {
-    if (timein.value === item && timein.value !== timeout.value) {
+  Object.keys(TIME_OPTION).forEach((item) => {
+    // если время заезда и выезда не совпадают
+    if (timein.value === item && item !== timeout.value) {
+      // выбираем дочерние option времени которое нужно изменить
       const select = timeout.getElementsByTagName('option');
       for (let i = 0; i < select.length; i++) {
+        // если оно совпадает с нужным нам ставим selected
         if (select[i].value === item) { select[i].selected = true; }
       }
     }
@@ -168,9 +164,9 @@ const chekingTimeIn = () => {
 };
 
 const chekingTimeOut = () => {
-  Object.keys(timeOption).forEach((item) => {
-    if (timeout.value === item && timeout.value !== timein.value) {
-      const select = timeout.getElementsByTagName('option');
+  Object.keys(TIME_OPTION).forEach((item) => {
+    if (timeout.value === item && item !== timein.value) {
+      const select = timein.getElementsByTagName('option');
       for (let i = 0; i < select.length; i++) {
         if (select[i].value === item) { select[i].selected = true; }
       }
