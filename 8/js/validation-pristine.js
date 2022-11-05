@@ -24,17 +24,10 @@ const MIN_PRICE = {
   'palace': 10000
 };
 
-const TIME_OPTION = {
-  '12:00': '12:00',
-  '13:00': '13:00',
-  '14:00': '14:00'
-};
-
 
 const adForm = document.querySelector('.ad-form'); // родитель форма form class="ad-form"
 const roomNumber = adForm.querySelector('#room_number'); // Количество комнат
 const capacity = adForm.querySelector('#capacity'); // Количество мест
-// const type = adForm.querySelector('#type option:checked'); // Тип жилья
 const type = adForm.querySelector('#type'); // Тип жилья
 const price = adForm.querySelector('#price'); // Цена за ночь
 const timein = adForm.querySelector('[name="timein"]');
@@ -89,9 +82,10 @@ pristine.addValidator(
 capacity.addEventListener('change', onCapacityChange);
 roomNumber.addEventListener('change', onRoomNumberChange);
 
+
 // **************************Валидация: цена за ночь - тип Жилья*********************
 
-const chekingTypeValue = () => {
+const onPlaceholderChange = () => {
   switch (type.value) {
     case 'bungalow': price.min = 0;
       break;
@@ -114,7 +108,7 @@ const validateType = () => {
 };
 
 // функция сообщения
-// Усли удалить min="1000" в index.html не будет выводится сообщение data-pristine-min-message
+// Если удалить min="1000" в index.html не будет выводится сообщение data-pristine-min-message
 const getTypeErrorMessage = () => {
   const selectedOption = type.querySelector('option:checked');
   return `Не меньше ${MIN_PRICE[selectedOption.value]} за ночь в: "${selectedOption.textContent}".`;
@@ -127,56 +121,23 @@ const onTypeChange = () => {
   pristine.validate(price);
 };
 
-type.addEventListener('change', chekingTypeValue); // подстановка в placeholder по нажатию
+type.addEventListener('change', onPlaceholderChange); // подстановка в placeholder по нажатию
 type.addEventListener('change', onTypeChange);
 
+
 // **************************Валидация: «Время заезда» - «Время выезда»*********************
-// const chekingTime = (standart, replacement) => {
-//   Object.keys(TIME_OPTION).forEach((item) => {
-//     if (standart.value === item && item !== replacement.value) {
-//       const select = replacement.getElementsByTagName('option');
-//       for (let i = 0; i < select.length; i++) {
-//         if (select[i].value === item) { select[i].selected = true; }
-//       }
-//     }
-//   });
-// };
 
-// const chekingTimeIn = chekingTime(timein, timeout);
-// const chekingTimeOut = chekingTime(timeout, timein);
-
-// timein.addEventListener('change', chekingTimeIn); // подстановка timein в timeout
-// timeout.addEventListener('change', chekingTimeOut); // подстановка timeout в timein
-
-
-const chekingTimeIn = () => {
-  Object.keys(TIME_OPTION).forEach((item) => {
-    // если время заезда и выезда не совпадают
-    if (timein.value === item && item !== timeout.value) {
-      // выбираем дочерние option времени которое нужно изменить
-      const select = timeout.getElementsByTagName('option');
-      for (let i = 0; i < select.length; i++) {
-        // если оно совпадает с нужным нам ставим selected
-        if (select[i].value === item) { select[i].selected = true; }
-      }
-    }
-  });
+const onTimeInChange = () => {
+  timeout.value = timein.value;
 };
 
-const chekingTimeOut = () => {
-  Object.keys(TIME_OPTION).forEach((item) => {
-    if (timeout.value === item && item !== timein.value) {
-      const select = timein.getElementsByTagName('option');
-      for (let i = 0; i < select.length; i++) {
-        if (select[i].value === item) { select[i].selected = true; }
-      }
-    }
-  });
+const onTimeOutChange = () => {
+  timein.value = timeout.value;
 };
 
 
-timein.addEventListener('change', chekingTimeIn); // подстановка timein в timeout
-timeout.addEventListener('change', chekingTimeOut); // подстановка timeout в timein
+timein.addEventListener('change', onTimeInChange); // подстановка timein в timeout
+timeout.addEventListener('change', onTimeOutChange); // подстановка timeout в timein
 
 
 // ******* ******************************общий вызов*************************************
