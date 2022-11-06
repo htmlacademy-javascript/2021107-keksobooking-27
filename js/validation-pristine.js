@@ -16,10 +16,23 @@ const GUESTS_IN_ROOM = {
   3: ['3']
 };
 
+const MIN_PRICE = {
+  'bungalow': 0,
+  'flat': 1000,
+  'hotel': 3000,
+  'house': 5000,
+  'palace': 10000
+};
+
 
 const adForm = document.querySelector('.ad-form'); // родитель форма form class="ad-form"
 const roomNumber = adForm.querySelector('#room_number'); // Количество комнат
 const capacity = adForm.querySelector('#capacity'); // Количество мест
+const type = adForm.querySelector('#type'); // Тип жилья
+const price = adForm.querySelector('#price'); // Цена за ночь
+const timein = adForm.querySelector('[name="timein"]');
+const timeout = adForm.querySelector('[name="timeout"]');
+
 
 // Функция простой валидации
 const pristine = new Pristine(adForm, {
@@ -28,6 +41,9 @@ const pristine = new Pristine(adForm, {
   errorTextParent: 'ad-form__element', // Элемент, куда будет выводиться текст с ошибкой (если повесить на label то ломается вёрстка)
 }, true // чтобы Pristine валидировала форму по мере ввода
 );
+
+// **************************Валидация: Количество комнат - Количество мест*********************
+
 
 // проверяем массив[Количество комнат] совпадает Количество мест (если совпадение то true)
 const validateCapacity = () => ROOMS_TO_GUEST[roomNumber.value].includes(capacity.value);
@@ -61,11 +77,70 @@ pristine.addValidator(
   getRoomNumberErrorMessage
 );
 
+
 // выбор пункта из списка
 capacity.addEventListener('change', onCapacityChange);
 roomNumber.addEventListener('change', onRoomNumberChange);
 
-// простая проверка полей заголовок объявления и цена за ночь
+
+// **************************Валидация: цена за ночь - тип Жилья*********************
+
+const onPlaceholderChange = () => {
+  switch (type.value) {
+    case 'bungalow': price.min = 0;
+      break;
+    case 'flat': price.min = 1000;
+      break;
+    case 'hotel': price.min = 3000;
+      break;
+    case 'house': price.min = 5000;
+      break;
+    default:
+      price.min = 10000;
+  }
+  price.placeholder = price.min;
+};
+
+// функция проверки
+const validateType = () => {
+  const selectedOption = type.querySelector('option:checked');
+  return +price.value >= MIN_PRICE[selectedOption.value];
+};
+
+// функция сообщения
+// Если удалить min="1000" в index.html не будет выводится сообщение data-pristine-min-message
+const getTypeErrorMessage = () => {
+  const selectedOption = type.querySelector('option:checked');
+  return `Не меньше ${MIN_PRICE[selectedOption.value]} за ночь в: "${selectedOption.textContent}".`;
+};
+
+// Кастомные функция проверки валидации «Тип жилья» - «Цена за ночь»
+pristine.addValidator(price, validateType, getTypeErrorMessage);
+
+const onTypeChange = () => {
+  pristine.validate(price);
+};
+
+type.addEventListener('change', onPlaceholderChange); // подстановка в placeholder по нажатию
+type.addEventListener('change', onTypeChange);
+
+
+// **************************Валидация: «Время заезда» - «Время выезда»*********************
+
+const onTimeInChange = () => {
+  timeout.value = timein.value;
+};
+
+const onTimeOutChange = () => {
+  timein.value = timeout.value;
+};
+
+
+timein.addEventListener('change', onTimeInChange); // подстановка timein в timeout
+timeout.addEventListener('change', onTimeOutChange); // подстановка timeout в timein
+
+
+// ******* ******************************общий вызов*************************************
 adForm.addEventListener('submit', (evt) => {
   evt.preventDefault(); // отменяется нажатие кнопки
   pristine.validate();
