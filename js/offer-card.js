@@ -152,5 +152,5 @@ const renderCard = ({ author, offer }) => { //используем дестру�
 };
 
 // используем append вместо appendChild, выводим один элемент
-mapBlock.append(renderCard(getTicets()[0]));
+// mapBlock.append(renderCard(getTicets()[0]));
 
