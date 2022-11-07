@@ -1,14 +1,9 @@
-import { disablingAdForm, disablingFormMapFilter } from './form.js';
+import { disablingAdForm } from './form.js';
 import { getTicets } from './data.js';
 import { renderCard } from './offer-card.js';
 
-
-
 const resetButton = document.querySelector('.ad-form__reset');
 const address = document.querySelector('#address');
-
-// disablingAdForm();
-// disablingFormMapFilter();
 
 
 // Создадим карту
@@ -71,9 +66,6 @@ resetButton.addEventListener('click', () => {
 });
 
 // ****************************** Дополнительные пины **********************************
-
-// используем append вместо appendChild, выводим один элемент
-// mapBlock.append(renderCard(getTicets()[0]));
 
 
 const icon = L.icon({
