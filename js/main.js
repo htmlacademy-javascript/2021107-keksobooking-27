@@ -1,4 +1,8 @@
-import './offer-card.js';
-import './form.js';
-import './validation-pristine.js';
+import { disablingAdForm, disablingFormMapFilter } from './form.js';
+import './map.js';
+import './slider-form.js';
+
+
+disablingAdForm();
+disablingFormMapFilter();
 

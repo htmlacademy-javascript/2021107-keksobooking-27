@@ -1,4 +1,3 @@
-import { getTicets } from './data.js';
 import { numDecline } from './utils.js';
 
 
@@ -57,8 +56,6 @@ const renderImage = (container, needArray) => {
 };
 
 
-// Временный блок для вставки карточки
-const mapBlock = document.querySelector('#map-canvas');
 // находим шаблон id="card" и в нём контейнер <article class="popup">
 const patternCardSticker = document.querySelector('#card').content.querySelector('.popup');
 
@@ -152,5 +149,8 @@ const renderCard = ({ author, offer }) => { //используем дестру�
 };
 
 // используем append вместо appendChild, выводим один элемент
-mapBlock.append(renderCard(getTicets()[0]));
+// mapBlock.append(renderCard(getTicets()[0]));
+export {
+  renderCard, // функция заполняющая карточку
+};
 
