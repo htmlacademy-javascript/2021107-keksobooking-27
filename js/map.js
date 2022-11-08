@@ -49,7 +49,7 @@ mainPinMarker.addTo(map); // затем добавляем на карту addTo
 // перемещение пина
 mainPinMarker.on('moveend', (evt) => { // обработчик события moveen - означает, что пользователь закончил передвигать метку
   const temporaryAddress = evt.target.getLatLng(); // метод getLatLng() возвращает объект с новыми координатами
-  address.value = `lat:${temporaryAddress.lat}, lng:${temporaryAddress.lng}`;
+  address.value = `${temporaryAddress.lat.toFixed(5)}, ${temporaryAddress.lng.toFixed(5)}`;
 });
 
 // сброс карты(RESET)
