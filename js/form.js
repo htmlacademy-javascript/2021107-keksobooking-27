@@ -1,4 +1,5 @@
-import { numDecline } from './utils.js';
+import { numDecline, showAlert } from './utils.js';
+import { getSuccessfulDownloadForm } from './message-user.js';
 
 // родитель форма
 const adForm = document.querySelector('.ad-form');
@@ -171,23 +172,56 @@ timeout.addEventListener('change', onTimeOutChange); // подстановка t
 
 //**************************************Общие вызовы, нажатия кнопок************************ */
 
-
-// сброс (RESET)
-resetButton.addEventListener('click', (evt) => {
-  evt.preventDefault(); // отменяется нажатие кнопки
+const resettingForm = () => {
   adForm.reset();
   price.placeholder = 0;
   pristine.reset();
-});
+};
+
+// сброс (RESET)
+const onResetClick = () => {
+  resetButton.addEventListener('click', (evt) => {
+    evt.preventDefault(); // отменяется нажатие кнопки
+    resettingForm();
+  });
+};
 
 // кнопка отправить
-adForm.addEventListener('submit', (evt) => {
-  evt.preventDefault(); // отменяется нажатие кнопки
-  pristine.validate();
-});
+const onUserFormSubmit = (onSuccess, callback) => { // чтобы можно было его добавлять по команде, например из других модулей. И при добавлении передавать какой-нибудь колбэк onSuccess на случай успешной отправки формы.
+  adForm.addEventListener('submit', (evt) => {
+    evt.preventDefault(); // отменяется нажатие кнопки
+    const isValid = pristine.validate();
+    if (isValid) {
+      const formData = new FormData(evt.target); // если пользователь ввёл валидные данные, соберём их с помощью FormData
+
+      // fetch для отправки данных
+      fetch(
+        'https://27.javascript.pages.academy/keksobooking',
+        {
+          method: 'POST',
+          body: formData,
+        },)
+        .then((response) => {
+          if (response.ok) {
+            onSuccess(); // в форме при успешной отправке, первый then у fetch, вызвать переданный колбэк
+            callback(); // нужно для reset пина
+            getSuccessfulDownloadForm();
+          } else {
+            showAlert('Не удалось отправить форму. Попробуйте ещё раз');
+          }
+        })
+        .catch(() => {
+          showAlert('Не удалось отправить форму. Попробуйте ещё раз');
+        });
+    }
+  });
+};
 
 export {
   disablingAdForm, // включения/выключения формы adForm
   disablingFormMapFilter, // включения/выключения формы mapFilter
+  onUserFormSubmit, // Кнопка "отправить"
+  resettingForm, // сброс форм
+  onResetClick // Кнопка сбросить
 };
 

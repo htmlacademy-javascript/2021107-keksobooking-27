@@ -1,6 +1,4 @@
 import { disablingAdForm } from './form.js';
-import { getTicets } from './data.js';
-import { renderCard } from './offer-card.js';
 
 const resetButton = document.querySelector('.ad-form__reset');
 const address = document.querySelector('#address');
@@ -53,7 +51,7 @@ mainPinMarker.on('moveend', (evt) => { // обработчик события mo
 });
 
 // сброс карты(RESET)
-resetButton.addEventListener('click', () => {
+const onButtonResetClick = () => {
   mainPinMarker.setLatLng({ //  setLatLng() вернуть метку на своё изначальное место с нужными координатами
     lat: 35.666881,
     lng: 139.754465,
@@ -63,6 +61,10 @@ resetButton.addEventListener('click', () => {
     lat: 35.6895,
     lng: 139.692,
   }, 11);
+};
+
+resetButton.addEventListener('click', () => {
+  onButtonResetClick();
 });
 
 
@@ -75,21 +77,6 @@ const icon = L.icon({
   iconAnchor: [20, 40],
 });
 
-// getTicets().forEach((point) => {
-//   const {lat, lng} = point.location;
-//   const marker = L.marker(
-//     {
-//       lat,
-//       lng,
-//     },
-//     {
-//       icon,
-//     },
-//   );
-
-//   marker.addTo(map)
-//     .bindPopup( renderCard(point)); // привяжем к каждой нашей метке балун bindPopup(), чтобы по клику на неё показывалась информация о месте
-// });
 const creatingPoints = (data, card) => {
   data.forEach((point) => {
     const { lat, lng } = point.location;
@@ -110,4 +97,5 @@ const creatingPoints = (data, card) => {
 
 export {
   creatingPoints, // Добавление второстепенных пинов на карту
+  onButtonResetClick, // Сброс главного пина
 };
