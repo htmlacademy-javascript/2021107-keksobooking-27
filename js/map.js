@@ -75,18 +75,39 @@ const icon = L.icon({
   iconAnchor: [20, 40],
 });
 
-getTicets().forEach((point) => {
-  const {lat, lng} = point.location;
-  const marker = L.marker(
-    {
-      lat,
-      lng,
-    },
-    {
-      icon,
-    },
-  );
+// getTicets().forEach((point) => {
+//   const {lat, lng} = point.location;
+//   const marker = L.marker(
+//     {
+//       lat,
+//       lng,
+//     },
+//     {
+//       icon,
+//     },
+//   );
 
-  marker.addTo(map)
-    .bindPopup( renderCard(point)); // привяжем к каждой нашей метке балун bindPopup(), чтобы по клику на неё показывалась информация о месте
-});
+//   marker.addTo(map)
+//     .bindPopup( renderCard(point)); // привяжем к каждой нашей метке балун bindPopup(), чтобы по клику на неё показывалась информация о месте
+// });
+const creatingPoints = (data, card) => {
+  data.forEach((point) => {
+    const { lat, lng } = point.location;
+    const marker = L.marker(
+      {
+        lat,
+        lng,
+      },
+      {
+        icon,
+      },
+    );
+
+    marker.addTo(map)
+      .bindPopup(card(point)); // привяжем к каждой нашей метке балун bindPopup(), чтобы по клику на неё показывалась информация о месте
+  });
+};
+
+export {
+  creatingPoints, // Добавление второстепенных пинов на карту
+};
