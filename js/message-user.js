@@ -5,44 +5,46 @@ const patternSuccess = document.querySelector('#success').content.querySelector(
 const body = document.querySelector('body');
 
 
-// // const onMessageEscKeydown = (evt) => {
-// //   if (isEscapeKey(evt)) {
-// //     evt.preventDefault();
-// //     // closeOpenMessage();
-// //     console.log('1111111111');
-// //   }
-// // };
-// // document.addEventListener('keydown', onMessageEscKeydown, {once:true});
+//**********************Удачная отправка формы************************* */
 
+
+// Удаление окна по ESC
 const onMessageEscKeydown = (evt) => {
   if (isEscapeKey(evt)) {
     evt.preventDefault();
-    // closeOpenMessage();
-    console.log('1111111111');
+    console.log('111111111111111111111111111111');
     body.removeChild(body.querySelector('.success'));
 
   }
 };
-document.addEventListener('keydown', onMessageEscKeydown,);
 
 
-// function closeOpenMessage() {
-//   document.addEventListener('keydown', onMessageEscKeydown, { once: true });
-//   // body.querySelector('.success').remove();
-// }
+// Удаление окна по click мышки
+const onMessageClick = () => {
+  console.log('222222222222222222222222222222');
+  body.removeChild(body.querySelector('.success'));
+};
+
+const closeOpenMessage = () => {
+  document.addEventListener('keydown', onMessageEscKeydown, { once: true });
+  document.addEventListener('click', onMessageClick, { once: true });
+
+};
 
 
-// // let modal = document.querySelector('.success');
-// // console.log(modal);
-
-
-//
 const getSuccessfulDownloadForm = () => {
   // клонирую patternSuccess со всем содержимым
   const ticetElement = patternSuccess.cloneNode(true);
-
   body.append(ticetElement);
+
+  closeOpenMessage(); // добавил удаление по ESC и click мышки
 };
+
+
+//**********************Неудачная отправка формы************************* */
+
+
+//**********************Общие вызовы************************* */
 
 export {
   getSuccessfulDownloadForm, // удачная загрузка

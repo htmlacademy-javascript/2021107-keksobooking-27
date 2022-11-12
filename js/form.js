@@ -1,5 +1,5 @@
 import { numDecline, showAlert } from './utils.js';
-import { getSuccessfulDownloadForm } from './message-user.js';
+import { getSuccessfulDownloadForm} from './message-user.js';
 
 // родитель форма
 const adForm = document.querySelector('.ad-form');
