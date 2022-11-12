@@ -1,5 +1,5 @@
-import { numDecline, showAlert } from './utils.js';
-import { getSuccessfulDownloadForm} from './message-user.js';
+import { numDecline } from './utils.js';
+import { getSuccessfulDownloadForm, getFailedDownloadForm } from './message-user.js';
 
 // родитель форма
 const adForm = document.querySelector('.ad-form');
@@ -11,6 +11,8 @@ const capacity = adForm.querySelector('#capacity'); // Количество ме
 const type = adForm.querySelector('#type'); // Тип жилья
 const timein = adForm.querySelector('[name="timein"]'); // время заезда
 const timeout = adForm.querySelector('[name="timeout"]'); // время выезда
+const submitButton = adForm.querySelector('.setup-submit');
+
 
 
 const WORDS = ['комната', 'комнаты', 'комнат', 'гость', 'гостя', 'гостей']; // Слова для склонения
@@ -153,6 +155,7 @@ const onTypeChange = () => {
 
 type.addEventListener('change', onPlaceholderChange); // подстановка в placeholder по нажатию
 type.addEventListener('change', onTypeChange);
+import {sendData} from './api.js';
 
 
 // **************************Валидация: «Время заезда» - «Время выезда»*********************
@@ -195,24 +198,7 @@ const onUserFormSubmit = (onSuccess, callback) => { // чтобы можно б�
       const formData = new FormData(evt.target); // если пользователь ввёл валидные данные, соберём их с помощью FormData
 
       // fetch для отправки данных
-      fetch(
-        'https://27.javascript.pages.academy/keksobooking',
-        {
-          method: 'POST',
-          body: formData,
-        },)
-        .then((response) => {
-          if (response.ok) {
-            onSuccess(); // в форме при успешной отправке, первый then у fetch, вызвать переданный колбэк
-            callback(); // нужно для reset пина
-            getSuccessfulDownloadForm();
-          } else {
-            showAlert('Не удалось отправить форму. Попробуйте ещё раз');
-          }
-        })
-        .catch(() => {
-          showAlert('Не удалось отправить форму. Попробуйте ещё раз');
-        });
+      sendData(onSuccess, callback, getSuccessfulDownloadForm, getFailedDownloadForm, formData);
     }
   });
 };
@@ -225,3 +211,7 @@ export {
   onResetClick // Кнопка сбросить
 };
 
+// sendData(
+//   () => {resettingForm(); onButtonResetClick(); getSuccessfulDownloadForm(); unblockSubmitButton();},
+//   () => {getFailedDownloadForm('Не удалось отправить форму. Попробуйте ещё раз.'); unblockSubmitButton();},
+//   formData,);

@@ -65,7 +65,7 @@ const showAlert = (message) => {
 };
 
 const isEscapeKey = (evt) => evt.key === 'Escape'; // нажатие Escape
-
+const isEnterKey = (evt) => evt.key === 'Enter'; // // нажатие Enter
 
 export {
   getRandomArbitrary,// возвращающает случайное целое число из переданного диапазона включительно
@@ -74,4 +74,5 @@ export {
   numDecline, // прваильное склонени существительного после чмслительного
   showAlert, // Сообщение об ошибке
   isEscapeKey,
+  isEnterKey,
 };

@@ -4,21 +4,16 @@ import { creatingPoints, onButtonResetClick } from './map.js';
 import { renderCard } from './offer-card.js';
 import './slider-form.js';
 import './message-user.js';
+import {getData} from './api.js';
 
 const FINISH_ELEMNT = 10;
+const TEXT_ALLERT_MESSAGE = 'Данные не загрузились. Попробуйте ещё раз.';
 
 disablingAdForm();
 disablingFormMapFilter();
 
 // AJAX-запрос на получение данных
-fetch('https://27.javascript.pages.academy/keksobooking/data')
-  .then((response) => response.json()) //  объект ответа Response;  превратить ответ в понятный нам вид, нужно вызвать метод json
-  .then((rooms) => {
-    creatingPoints(rooms.slice(0, FINISH_ELEMNT), renderCard); // обрезка до нужного количества
-  })
-  .catch(() => {
-    showAlert('Данные не загрузились. Попробуйте ещё раз'); // Ошибка при загрузке
-  });
+getData(creatingPoints, renderCard, FINISH_ELEMNT, showAlert, TEXT_ALLERT_MESSAGE);
 
 onUserFormSubmit(resettingForm, onButtonResetClick); // сброс формы после успешной отпрвавки
 onResetClick(); // кнопка сброс
