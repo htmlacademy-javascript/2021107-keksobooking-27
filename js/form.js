@@ -1,5 +1,7 @@
 import { numDecline } from './utils.js';
 import { getSuccessfulDownloadForm, getFailedDownloadForm } from './message-user.js';
+import { sendData } from './api.js';
+
 
 // родитель форма
 const adForm = document.querySelector('.ad-form');
@@ -11,8 +13,7 @@ const capacity = adForm.querySelector('#capacity'); // Количество ме
 const type = adForm.querySelector('#type'); // Тип жилья
 const timein = adForm.querySelector('[name="timein"]'); // время заезда
 const timeout = adForm.querySelector('[name="timeout"]'); // время выезда
-const submitButton = adForm.querySelector('.setup-submit');
-
+const submitButton = adForm.querySelector('.ad-form__submit');
 
 
 const WORDS = ['комната', 'комнаты', 'комнат', 'гость', 'гостя', 'гостей']; // Слова для склонения
@@ -155,7 +156,6 @@ const onTypeChange = () => {
 
 type.addEventListener('change', onPlaceholderChange); // подстановка в placeholder по нажатию
 type.addEventListener('change', onTypeChange);
-import {sendData} from './api.js';
 
 
 // **************************Валидация: «Время заезда» - «Время выезда»*********************
@@ -190,18 +190,42 @@ const onResetClick = () => {
 };
 
 // кнопка отправить
-const onUserFormSubmit = (onSuccess, callback) => { // чтобы можно было его добавлять по команде, например из других модулей. И при добавлении передавать какой-нибудь колбэк onSuccess на случай успешной отправки формы.
+// const onUserFormSubmit = (onSuccess, callback) => { // чтобы можно было его добавлять по команде, например из других модулей. И при добавлении передавать какой-нибудь колбэк onSuccess на случай успешной отправки формы.
+//   adForm.addEventListener('submit', (evt) => {
+//     evt.preventDefault(); // отменяется нажатие кнопки
+//     const isValid = pristine.validate();
+//     if (isValid) {
+//       const formData = new FormData(evt.target); // если пользователь ввёл валидные данные, соберём их с помощью FormData
+
+//       // fetch для отправки данных
+//       sendData(onSuccess, callback, getSuccessfulDownloadForm, getFailedDownloadForm, formData);
+//     }
+//   });
+// };
+
+const blockSubmitButton = () => {
+  submitButton.disabled = true;
+  submitButton.textContent = 'Публикую...';
+};
+
+const unblockSubmitButton = () => {
+  submitButton.disabled = false;
+  submitButton.textContent = 'Опубликовать';
+};
+
+const onUserFormSubmit = (oneAction, twoAction) => { // чтобы можно было его добавлять по команде, например из других модулей. И при добавлении передавать какой-нибудь колбэк onSuccess на случай успешной отправки формы.
   adForm.addEventListener('submit', (evt) => {
     evt.preventDefault(); // отменяется нажатие кнопки
     const isValid = pristine.validate();
     if (isValid) {
       const formData = new FormData(evt.target); // если пользователь ввёл валидные данные, соберём их с помощью FormData
-
+      blockSubmitButton();
       // fetch для отправки данных
-      sendData(onSuccess, callback, getSuccessfulDownloadForm, getFailedDownloadForm, formData);
+      sendData(() => { oneAction(); twoAction(); getSuccessfulDownloadForm(); unblockSubmitButton(); }, () => { getFailedDownloadForm(); unblockSubmitButton(); }, formData);
     }
   });
 };
+
 
 export {
   disablingAdForm, // включения/выключения формы adForm

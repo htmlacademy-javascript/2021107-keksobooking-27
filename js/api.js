@@ -10,7 +10,7 @@ const getData = (onSuccess, card, quantity, message, textMessage) => { // (со�
     });
 };
 
-const sendData = (resetForm, callback, onSuccess, onFail, readyData) => { // (сбрасываем форму, сбрасываем пин, хорошее сообщение, плохое сообщение, данные собранные с форм)
+const sendData = (onSuccess, onFail, readyData) => { // (сбрасываем форму, сбрасываем пин, хорошее сообщение, плохое сообщение, данные собранные с форм)
   // fetch для отправки данных
   fetch(
     'https://27.javascript.pages.academy/keksobooking',
@@ -20,9 +20,7 @@ const sendData = (resetForm, callback, onSuccess, onFail, readyData) => { // (с
     },)
     .then((response) => {
       if (response.ok) {
-        resetForm(); // в форме при успешной отправке, первый then у fetch, вызвать переданный колбэк
-        callback(); // нужно для reset пина
-        onSuccess();
+        onSuccess(); // в форме при успешной отправке, первый then у fetch, вызвать переданный колбэк
       } else {
         onFail();
       }
@@ -32,25 +30,5 @@ const sendData = (resetForm, callback, onSuccess, onFail, readyData) => { // (с
     });
 };
 
+
 export { getData, sendData };
-
-
-// const sendData = (onSuccess, onFail, readyData) => { // (сбрасываем форму, сбрасываем пин, хорошее сообщение, плохое сообщение, данные собранные с форм)
-//   // fetch для отправки данных
-//   fetch(
-//     'https://27.javascript.pages.academy/keksobooking',
-//     {
-//       method: 'POST',
-//       body: readyData,
-//     },)
-//     .then((response) => {
-//       if (response.ok) {
-//         onSuccess();
-//       } else {
-//         onFail();
-//       }
-//     })
-//     .catch(() => {
-//       onFail();
-//     });
-// };
