@@ -32,3 +32,30 @@ const sendData = (onSuccess, onFail, readyData) => { // (сбрасываем ф
 
 
 export { getData, sendData };
+
+//********************************************************************************* */
+console.log(11111111111);
+
+const Urls = {
+  GET: 'https://27.javascript.pages.academy/keksobooking/data',
+  POST: 'https://27.javascript.pages.academy/keksobooking',
+};
+
+const request = (onSuccess, onFail, method, readyData) => {
+  fetch(
+    Urls[method],
+    {
+      method: method,
+      body: readyData,
+    },
+  )
+    .then((response) => response.json())
+    .then((data) => {
+      onSuccess(data);
+    })
+    .catch(() => {
+      onFail();
+    });
+};
+
+export { request };

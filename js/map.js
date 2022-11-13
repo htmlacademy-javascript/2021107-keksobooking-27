@@ -4,10 +4,49 @@ const resetButton = document.querySelector('.ad-form__reset');
 const address = document.querySelector('#address');
 
 
+// // Создадим карту
+// const map = L.map('map-canvas')
+//   .on('load', () => { //  «инициализация», и когда карта будет готова
+//     disablingAdForm(); // разблокируем форму
+//   })
+//   .setView({
+//     lat: 35.6895,
+//     lng: 139.752465,
+//   }, 11);
+
+// L.tileLayer( //  создаём нужный слой  командой L.tileLayer(), изображениями карт от OpenStreetMap добавив как слой на нашу созданную карту
+//   'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+//   {
+//     attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+//   },
+// ).addTo(map); // добавляем слой на карту методом addTo()
+
+//****************************************************** */
+// console.log(22222222);
+import { request } from './api.js';
+import { showAlert } from './utils.js';
+import { renderCard } from './offer-card.js';
+
+
+const FINISH_ELEMNT = 10;
+const TEXT_ALLERT_MESSAGE = 'Данные не загрузились. Попробуйте ещё раз.';
+let adverts = [];
+
+const onSuccess = (data) => {
+  adverts = data.slice();
+
+  creatingPoints(adverts.slice(0,FINISH_ELEMNT), renderCard);
+};
+
+const onError = () => {
+  showAlert(TEXT_ALLERT_MESSAGE);
+};
+
 // Создадим карту
 const map = L.map('map-canvas')
   .on('load', () => { //  «инициализация», и когда карта будет готова
     disablingAdForm(); // разблокируем форму
+    request(onSuccess, onError, 'GET');
   })
   .setView({
     lat: 35.6895,
@@ -21,6 +60,7 @@ L.tileLayer( //  создаём нужный слой  командой L.tileLa
   },
 ).addTo(map); // добавляем слой на карту методом addTo()
 
+//****************************************************************** */
 
 // *******************************************Главный пин**************************************
 
