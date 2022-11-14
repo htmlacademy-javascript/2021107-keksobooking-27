@@ -1,6 +1,6 @@
 import { numDecline } from './utils.js';
 import { getSuccessfulDownloadForm, getFailedDownloadForm } from './message-user.js';
-import { sendData } from './api.js';
+import { makeRequest } from './api.js';
 
 
 // родитель форма
@@ -189,31 +189,19 @@ const onResetClick = () => {
   });
 };
 
-// кнопка отправить
-// const onUserFormSubmit = (onSuccess, callback) => { // чтобы можно было его добавлять по команде, например из других модулей. И при добавлении передавать какой-нибудь колбэк onSuccess на случай успешной отправки формы.
-//   adForm.addEventListener('submit', (evt) => {
-//     evt.preventDefault(); // отменяется нажатие кнопки
-//     const isValid = pristine.validate();
-//     if (isValid) {
-//       const formData = new FormData(evt.target); // если пользователь ввёл валидные данные, соберём их с помощью FormData
 
-//       // fetch для отправки данных
-//       sendData(onSuccess, callback, getSuccessfulDownloadForm, getFailedDownloadForm, formData);
-//     }
-//   });
-// };
-
-const blockSubmitButton = () => {
+const blockSubmitButton = () => { // Блокирует кнопку отправить
   submitButton.disabled = true;
   submitButton.textContent = 'Публикую...';
 };
 
-const unblockSubmitButton = () => {
+const unblockSubmitButton = () => { // Разблокирует кнопку отправить
   submitButton.disabled = false;
   submitButton.textContent = 'Опубликовать';
 };
 
-const onUserFormSubmit = (oneAction, twoAction) => { // чтобы можно было его добавлять по команде, например из других модулей. И при добавлении передавать какой-нибудь колбэк onSuccess на случай успешной отправки формы.
+// кнопка отправить
+const onUserFormSubmit = (oneAction, twoAction) => { // oneAction-нужно для reset form, twoAction-нужно для reset пина
   adForm.addEventListener('submit', (evt) => {
     evt.preventDefault(); // отменяется нажатие кнопки
     const isValid = pristine.validate();
@@ -221,11 +209,10 @@ const onUserFormSubmit = (oneAction, twoAction) => { // чтобы можно б
       const formData = new FormData(evt.target); // если пользователь ввёл валидные данные, соберём их с помощью FormData
       blockSubmitButton();
       // fetch для отправки данных
-      sendData(() => { oneAction(); twoAction(); getSuccessfulDownloadForm(); unblockSubmitButton(); }, () => { getFailedDownloadForm(); unblockSubmitButton(); }, formData);
+      makeRequest(() => { oneAction(); twoAction(); getSuccessfulDownloadForm(); unblockSubmitButton(); }, () => { getFailedDownloadForm(); unblockSubmitButton(); }, 'POST', formData);
     }
   });
 };
-
 
 export {
   disablingAdForm, // включения/выключения формы adForm
@@ -234,8 +221,3 @@ export {
   resettingForm, // сброс форм
   onResetClick // Кнопка сбросить
 };
-
-// sendData(
-//   () => {resettingForm(); onButtonResetClick(); getSuccessfulDownloadForm(); unblockSubmitButton();},
-//   () => {getFailedDownloadForm('Не удалось отправить форму. Попробуйте ещё раз.'); unblockSubmitButton();},
-//   formData,);
