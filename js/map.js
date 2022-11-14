@@ -1,58 +1,23 @@
 import { disablingAdForm } from './form.js';
-
-const resetButton = document.querySelector('.ad-form__reset');
-const address = document.querySelector('#address');
-
-
-// // Создадим карту
-// const map = L.map('map-canvas')
-//   .on('load', () => { //  «инициализация», и когда карта будет готова
-//     disablingAdForm(); // разблокируем форму
-//   })
-//   .setView({
-//     lat: 35.6895,
-//     lng: 139.752465,
-//   }, 11);
-
-// L.tileLayer( //  создаём нужный слой  командой L.tileLayer(), изображениями карт от OpenStreetMap добавив как слой на нашу созданную карту
-//   'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
-//   {
-//     attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-//   },
-// ).addTo(map); // добавляем слой на карту методом addTo()
-
-//****************************************************** */
-// console.log(22222222);
 import { request } from './api.js';
 import { showAlert } from './utils.js';
 import { renderCard } from './offer-card.js';
 
+const resetButton = document.querySelector('.ad-form__reset');
+const address = document.querySelector('#address');
 
+const LAT = 35.6895;
+const LNG = 139.752465;
+const PIN_LATITUDE = 35.66399;
+const PIN_LOMGITUDE = 139.73785;
+const SCALE = 11;
 const FINISH_ELEMNT = 10;
 const TEXT_ALLERT_MESSAGE = 'Данные не загрузились. Попробуйте ещё раз.';
-let adverts = [];
+let adverts = []; // переменная для хранения получеенныч с сервера даннных
 
-const onSuccess = (data) => {
-  adverts = data.slice();
-
-  creatingPoints(adverts.slice(0,FINISH_ELEMNT), renderCard);
-};
-
-const onError = () => {
-  showAlert(TEXT_ALLERT_MESSAGE);
-};
 
 // Создадим карту
-const map = L.map('map-canvas')
-  .on('load', () => { //  «инициализация», и когда карта будет готова
-    disablingAdForm(); // разблокируем форму
-    request(onSuccess, onError, 'GET');
-  })
-  .setView({
-    lat: 35.6895,
-    lng: 139.752465,
-  }, 11);
-
+const map = L.map('map-canvas');
 L.tileLayer( //  создаём нужный слой  командой L.tileLayer(), изображениями карт от OpenStreetMap добавив как слой на нашу созданную карту
   'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
   {
@@ -60,7 +25,6 @@ L.tileLayer( //  создаём нужный слой  командой L.tileLa
   },
 ).addTo(map); // добавляем слой на карту методом addTo()
 
-//****************************************************************** */
 
 // *******************************************Главный пин**************************************
 
@@ -72,8 +36,8 @@ const mainPinIcon = L.icon({ //  создаём L.icon() то, что нужно
 
 const mainPinMarker = L.marker( // добавить метку
   {
-    lat: 35.666881,
-    lng: 139.752465,
+    lat: PIN_LATITUDE,
+    lng: PIN_LOMGITUDE,
   },
   {
     draggable: true, // метку можно передвигать по карте
@@ -93,14 +57,14 @@ mainPinMarker.on('moveend', (evt) => { // обработчик события mo
 // сброс карты(RESET)
 const onButtonResetClick = () => {
   mainPinMarker.setLatLng({ //  setLatLng() вернуть метку на своё изначальное место с нужными координатами
-    lat: 35.666881,
-    lng: 139.754465,
+    lat: PIN_LATITUDE,
+    lng: PIN_LOMGITUDE,
   });
 
   map.setView({ //  возвращение к начальным значениям масштаба и центра карты
     lat: 35.6895,
     lng: 139.692,
-  }, 11);
+  }, SCALE);
 };
 
 resetButton.addEventListener('click', () => {
@@ -135,7 +99,31 @@ const creatingPoints = (data, card) => {
   });
 };
 
+
+//***********************************************Отрисовка нужных пинов, нормальная работа, обработка ошибок */
+
+const onSuccess = (data) => {
+  adverts = data.slice();
+
+  creatingPoints(adverts.slice(0, FINISH_ELEMNT), renderCard);
+};
+
+const onError = () => {
+  showAlert(TEXT_ALLERT_MESSAGE);
+};
+
+map.on('load', () => { //  «инициализация», и когда карта будет готова
+  disablingAdForm(); // разблокируем форму
+  request(onSuccess, onError, 'GET');
+})
+  .setView({
+    lat: LAT,
+    lng: LNG,
+  }, SCALE);
+
+
 export {
   creatingPoints, // Добавление второстепенных пинов на карту
   onButtonResetClick, // Сброс главного пина
 };
+
