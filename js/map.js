@@ -1,5 +1,5 @@
 import { disablingAdForm } from './form.js';
-import { request } from './api.js';
+import { makeRequest } from './api.js';
 import { showAlert } from './utils.js';
 import { renderCard } from './offer-card.js';
 
@@ -114,7 +114,7 @@ const onError = () => {
 
 map.on('load', () => { //  «инициализация», и когда карта будет готова
   disablingAdForm(); // разблокируем форму
-  request(onSuccess, onError, 'GET');
+  makeRequest(onSuccess, onError, 'GET');
 })
   .setView({
     lat: LAT,

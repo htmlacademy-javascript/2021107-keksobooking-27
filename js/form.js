@@ -1,6 +1,6 @@
 import { numDecline } from './utils.js';
 import { getSuccessfulDownloadForm, getFailedDownloadForm } from './message-user.js';
-import { sendData } from './api.js';
+import { makeRequest } from './api.js';
 
 
 // родитель форма
@@ -201,8 +201,6 @@ const unblockSubmitButton = () => { // Разблокирует кнопку о�
 };
 
 // кнопка отправить
-import { request } from './api.js';
-
 const onUserFormSubmit = (oneAction, twoAction) => { // oneAction-нужно для reset form, twoAction-нужно для reset пина
   adForm.addEventListener('submit', (evt) => {
     evt.preventDefault(); // отменяется нажатие кнопки
@@ -211,7 +209,7 @@ const onUserFormSubmit = (oneAction, twoAction) => { // oneAction-нужно д�
       const formData = new FormData(evt.target); // если пользователь ввёл валидные данные, соберём их с помощью FormData
       blockSubmitButton();
       // fetch для отправки данных
-      request(() => { oneAction(); twoAction(); getSuccessfulDownloadForm(); unblockSubmitButton(); }, () => { getFailedDownloadForm(); unblockSubmitButton(); }, 'POST', formData);
+      makeRequest(() => { oneAction(); twoAction(); getSuccessfulDownloadForm(); unblockSubmitButton(); }, () => { getFailedDownloadForm(); unblockSubmitButton(); }, 'POST', formData);
     }
   });
 };
