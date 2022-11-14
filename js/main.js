@@ -1,7 +1,8 @@
-import { showAlert } from './utils.js';
+// import { showAlert } from './utils.js';
 import { disablingAdForm, disablingFormMapFilter, onUserFormSubmit, resettingForm, onResetClick } from './form.js';
-import { creatingPoints, onButtonResetClick } from './map.js';
-import { renderCard } from './offer-card.js';
+// import { creatingPoints, onButtonResetClick } from './map.js';
+import { onButtonResetClick } from './map.js';
+// import { renderCard } from './offer-card.js';
 import './slider-form.js';
 import './message-user.js';
 // import {getData} from './api.js';

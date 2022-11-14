@@ -81,7 +81,7 @@ const icon = L.icon({
   iconAnchor: [20, 40],
 });
 
-const creatingPoints = (data, card) => {
+const creatingPoints = (data, card) => { // Добавление второстепенных пинов на карту
   data.forEach((point) => {
     const { lat, lng } = point.location;
     const marker = L.marker(
@@ -123,7 +123,6 @@ map.on('load', () => { //  «инициализация», и когда кар�
 
 
 export {
-  creatingPoints, // Добавление второстепенных пинов на карту
   onButtonResetClick, // Сброс главного пина
 };
 

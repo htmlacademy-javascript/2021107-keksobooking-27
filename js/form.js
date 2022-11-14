@@ -201,6 +201,8 @@ const unblockSubmitButton = () => { // Разблокирует кнопку о�
 };
 
 // кнопка отправить
+import { request } from './api.js';
+
 const onUserFormSubmit = (oneAction, twoAction) => { // oneAction-нужно для reset form, twoAction-нужно для reset пина
   adForm.addEventListener('submit', (evt) => {
     evt.preventDefault(); // отменяется нажатие кнопки
@@ -209,11 +211,10 @@ const onUserFormSubmit = (oneAction, twoAction) => { // oneAction-нужно д�
       const formData = new FormData(evt.target); // если пользователь ввёл валидные данные, соберём их с помощью FormData
       blockSubmitButton();
       // fetch для отправки данных
-      sendData(() => { oneAction(); twoAction(); getSuccessfulDownloadForm(); unblockSubmitButton(); }, () => { getFailedDownloadForm(); unblockSubmitButton(); }, formData);
+      request(() => { oneAction(); twoAction(); getSuccessfulDownloadForm(); unblockSubmitButton(); }, () => { getFailedDownloadForm(); unblockSubmitButton(); }, 'POST', formData);
     }
   });
 };
-
 
 export {
   disablingAdForm, // включения/выключения формы adForm
