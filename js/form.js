@@ -1,4 +1,7 @@
 import { numDecline } from './utils.js';
+import { getSuccessfulDownloadForm, getFailedDownloadForm } from './message-user.js';
+import { makeRequest } from './api.js';
+
 
 // родитель форма
 const adForm = document.querySelector('.ad-form');
@@ -10,6 +13,7 @@ const capacity = adForm.querySelector('#capacity'); // Количество ме
 const type = adForm.querySelector('#type'); // Тип жилья
 const timein = adForm.querySelector('[name="timein"]'); // время заезда
 const timeout = adForm.querySelector('[name="timeout"]'); // время выезда
+const submitButton = adForm.querySelector('.ad-form__submit');
 
 
 const WORDS = ['комната', 'комнаты', 'комнат', 'гость', 'гостя', 'гостей']; // Слова для склонения
@@ -171,23 +175,49 @@ timeout.addEventListener('change', onTimeOutChange); // подстановка t
 
 //**************************************Общие вызовы, нажатия кнопок************************ */
 
-
-// сброс (RESET)
-resetButton.addEventListener('click', (evt) => {
-  evt.preventDefault(); // отменяется нажатие кнопки
+const resettingForm = () => {
   adForm.reset();
   price.placeholder = 0;
   pristine.reset();
-});
+};
+
+// сброс (RESET)
+const onResetClick = () => {
+  resetButton.addEventListener('click', (evt) => {
+    evt.preventDefault(); // отменяется нажатие кнопки
+    resettingForm();
+  });
+};
+
+
+const blockSubmitButton = () => { // Блокирует кнопку отправить
+  submitButton.disabled = true;
+  submitButton.textContent = 'Публикую...';
+};
+
+const unblockSubmitButton = () => { // Разблокирует кнопку отправить
+  submitButton.disabled = false;
+  submitButton.textContent = 'Опубликовать';
+};
 
 // кнопка отправить
-adForm.addEventListener('submit', (evt) => {
-  evt.preventDefault(); // отменяется нажатие кнопки
-  pristine.validate();
-});
+const onUserFormSubmit = (oneAction, twoAction) => { // oneAction-нужно для reset form, twoAction-нужно для reset пина
+  adForm.addEventListener('submit', (evt) => {
+    evt.preventDefault(); // отменяется нажатие кнопки
+    const isValid = pristine.validate();
+    if (isValid) {
+      const formData = new FormData(evt.target); // если пользователь ввёл валидные данные, соберём их с помощью FormData
+      blockSubmitButton();
+      // fetch для отправки данных
+      makeRequest(() => { oneAction(); twoAction(); getSuccessfulDownloadForm(); unblockSubmitButton(); }, () => { getFailedDownloadForm(); unblockSubmitButton(); }, 'POST', formData);
+    }
+  });
+};
 
 export {
   disablingAdForm, // включения/выключения формы adForm
   disablingFormMapFilter, // включения/выключения формы mapFilter
+  onUserFormSubmit, // Кнопка "отправить"
+  resettingForm, // сброс форм
+  onResetClick // Кнопка сбросить
 };
-

@@ -1,3 +1,5 @@
+const ALERT_SHOW_TIME = 5000;
+
 // https://developer.mozilla.org/ru/docs/Web/JavaScript/Reference/Global_Objects/Math/random#получение_случайного_числа_в_заданном_интервале
 const getRandomArbitrary = (min, max) => {
   // проверка на правильность исходных данных
@@ -40,10 +42,37 @@ const numDecline = (num, nominative, genitiveSingular, genitivePlural) => {
   return genitivePlural;
 };
 
+// Сообщение об ошибке
+const showAlert = (message) => {
+  const alertContainer = document.createElement('div');
+  alertContainer.style.zIndex = '100';
+  alertContainer.style.position = 'absolute';
+  alertContainer.style.left = '0';
+  alertContainer.style.top = '0';
+  alertContainer.style.right = '0';
+  alertContainer.style.padding = '10px 3px';
+  alertContainer.style.fontSize = '30px';
+  alertContainer.style.textAlign = 'center';
+  alertContainer.style.backgroundColor = 'red';
+
+  alertContainer.textContent = message;
+
+  document.body.append(alertContainer);
+
+  setTimeout(() => {
+    alertContainer.remove();
+  }, ALERT_SHOW_TIME);
+};
+
+const isEscapeKey = (evt) => evt.key === 'Escape'; // нажатие Escape
+const isEnterKey = (evt) => evt.key === 'Enter'; // // нажатие Enter
 
 export {
   getRandomArbitrary,// возвращающает случайное целое число из переданного диапазона включительно
   getRandomArbitraryFloat, // возвращающая случайное число с плавающей точкой из переданного диапазона включительно
   getRandomArrayElement, // Функция выбора случайного элемента из массива
-  numDecline // прваильное склонени существительного после чмслительного
+  numDecline, // прваильное склонени существительного после чмслительного
+  showAlert, // Сообщение об ошибке
+  isEscapeKey,
+  isEnterKey,
 };

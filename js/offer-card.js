@@ -148,8 +148,6 @@ const renderCard = ({ author, offer }) => { //используем дестру�
   return ticetElement;
 };
 
-// используем append вместо appendChild, выводим один элемент
-// mapBlock.append(renderCard(getTicets()[0]));
 export {
   renderCard, // функция заполняющая карточку
 };
