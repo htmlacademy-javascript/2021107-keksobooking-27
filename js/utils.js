@@ -30,10 +30,10 @@ const getRandomArrayElement = (array) => array[getRandomArbitrary(0, array.lengt
 
 // Функция выбирает прваильное склонени существительного после чмслительного
 const numDecline = (num, nominative, genitiveSingular, genitivePlural) => {
-  if(num > 10 && (Math.round((num % 100) / 10)) === 1) {
+  if (num > 10 && (Math.round((num % 100) / 10)) === 1) {
     return genitivePlural;
   }
-  switch(num % 10){
+  switch (num % 10) {
     case 1: return nominative;
     case 2:
     case 3:
@@ -67,6 +67,27 @@ const showAlert = (message) => {
 const isEscapeKey = (evt) => evt.key === 'Escape'; // нажатие Escape
 const isEnterKey = (evt) => evt.key === 'Enter'; // // нажатие Enter
 
+// Функция взята из интернета и доработана
+// Источник - https://www.freecodecamp.org/news/javascript-debounce-example
+
+const debounce = (callback, timeoutDelay = 500) => {
+  // Используем замыкания, чтобы id таймаута у нас навсегда приклеился
+  // к возвращаемой функции с setTimeout, тогда мы его сможем перезаписывать
+  let timeoutId;
+
+  return (...rest) => {
+    // Перед каждым новым вызовом удаляем предыдущий таймаут,
+    // чтобы они не накапливались
+    clearTimeout(timeoutId);
+
+    // Затем устанавливаем новый таймаут с вызовом колбэка на ту же задержку
+    timeoutId = setTimeout(() => callback.apply(this, rest), timeoutDelay);
+
+    // Таким образом цикл «поставить таймаут - удалить таймаут» будет выполняться,
+    // пока действие совершается чаще, чем переданная задержка timeoutDelay
+  };
+};
+
 export {
   getRandomArbitrary,// возвращающает случайное целое число из переданного диапазона включительно
   getRandomArbitraryFloat, // возвращающая случайное число с плавающей точкой из переданного диапазона включительно
@@ -75,4 +96,5 @@ export {
   showAlert, // Сообщение об ошибке
   isEscapeKey,
   isEnterKey,
+  debounce, // Задержка на частое выполнение функции
 };
