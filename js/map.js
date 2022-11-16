@@ -2,9 +2,12 @@ import { disablingAdForm, disablingFormMapFilter } from './form.js';
 import { makeRequest } from './api.js';
 import { showAlert } from './utils.js';
 import { renderCard } from './offer-card.js';
+import { filterData } from './sort-points.js';
+
 
 const resetButton = document.querySelector('.ad-form__reset');
 const address = document.querySelector('#address');
+const mapFilters = document.querySelector('.map__filters');
 
 const LAT = 35.6895;
 const LNG = 139.752465;
@@ -81,9 +84,7 @@ const icon = L.icon({
   iconAnchor: [20, 40],
 });
 
-const removePoints = () => {
-  map.clearMap();
-};
+const pointsGroup = L.layerGroup().addTo(map);
 
 const creatingPoints = (data, card) => { // Добавление второстепенных пинов на карту
   data.forEach((point) => {
@@ -98,7 +99,7 @@ const creatingPoints = (data, card) => { // Добавление второст�
       },
     );
 
-    marker.addTo(map)
+    marker.addTo(pointsGroup)
       .bindPopup(card(point)); // привяжем к каждой нашей метке балун bindPopup(), чтобы по клику на неё показывалась информация о месте
   });
 };
@@ -106,11 +107,27 @@ const creatingPoints = (data, card) => { // Добавление второст�
 
 //***********************************************Отрисовка нужных пинов, нормальная работа, обработка ошибок */
 
+//*********************************************** */
+const removePoints = () => {
+  pointsGroup.clearLayers();
+};
+
+
+const onMapFilterChange = () => {
+  removePoints(); // удаляет метки
+  creatingPoints(filterData(adverts)); // Создаёт метки уже с фильтрами
+};
+console.log(11111111);
+//************************************************ */
+
 const onSuccess = (data) => {
   adverts = data.slice();
+  console.log(adverts);
 
   disablingFormMapFilter(); // Разблокируеи фильтрацию
-  creatingPoints(adverts.slice(0, FINISH_ELEMNT), renderCard);
+  creatingPoints(adverts.slice(0, FINISH_ELEMNT), renderCard); // Создаёт 10 меток сразу
+
+  mapFilters.addEventListener('change', onMapFilterChange);
 };
 
 const onError = () => {

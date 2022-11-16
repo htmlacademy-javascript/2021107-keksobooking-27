@@ -2,7 +2,8 @@ import { disablingAdForm, disablingFormMapFilter, onUserFormSubmit, resettingFor
 import { onButtonResetClick } from './map.js';
 import './slider-form.js';
 import './message-user.js';
-
+// import './sort-points.js';
+console.log('filterData');
 
 disablingAdForm();
 disablingFormMapFilter();
