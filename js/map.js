@@ -1,4 +1,4 @@
-import { disablingAdForm } from './form.js';
+import { disablingAdForm, disablingFormMapFilter } from './form.js';
 import { makeRequest } from './api.js';
 import { showAlert } from './utils.js';
 import { renderCard } from './offer-card.js';
@@ -81,6 +81,10 @@ const icon = L.icon({
   iconAnchor: [20, 40],
 });
 
+const removePoints = () => {
+  map.clearMap();
+};
+
 const creatingPoints = (data, card) => { // Добавление второстепенных пинов на карту
   data.forEach((point) => {
     const { lat, lng } = point.location;
@@ -105,6 +109,7 @@ const creatingPoints = (data, card) => { // Добавление второст�
 const onSuccess = (data) => {
   adverts = data.slice();
 
+  disablingFormMapFilter(); // Разблокируеи фильтрацию
   creatingPoints(adverts.slice(0, FINISH_ELEMNT), renderCard);
 };
 
