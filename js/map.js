@@ -107,22 +107,18 @@ const creatingPoints = (data, card) => { // Добавление второст�
 
 //***********************************************Отрисовка нужных пинов, нормальная работа, обработка ошибок */
 
-//*********************************************** */
-const removePoints = () => {
+const removePoints = () => { // Удаление пинов
   pointsGroup.clearLayers();
 };
 
-
 const onMapFilterChange = () => {
   removePoints(); // удаляет метки
-  creatingPoints(filterData(adverts)); // Создаёт метки уже с фильтрами
+
+  creatingPoints(filterData(adverts), renderCard); // Создаёт метки уже с фильтрами
 };
-console.log(11111111);
-//************************************************ */
 
 const onSuccess = (data) => {
   adverts = data.slice();
-  console.log(adverts);
 
   disablingFormMapFilter(); // Разблокируеи фильтрацию
   creatingPoints(adverts.slice(0, FINISH_ELEMNT), renderCard); // Создаёт 10 меток сразу
