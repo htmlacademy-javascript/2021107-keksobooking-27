@@ -3,7 +3,6 @@ import { onButtonResetClick } from './map.js';
 import './slider-form.js';
 import './message-user.js';
 
-
 disablingAdForm();
 disablingFormMapFilter();
 

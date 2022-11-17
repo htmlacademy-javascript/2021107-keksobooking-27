@@ -1,10 +1,13 @@
-import { disablingAdForm } from './form.js';
+import { disablingAdForm, disablingFormMapFilter } from './form.js';
 import { makeRequest } from './api.js';
-import { showAlert } from './utils.js';
+import { showAlert, debounce } from './utils.js';
 import { renderCard } from './offer-card.js';
+import { filterData } from './sort-points.js';
+
 
 const resetButton = document.querySelector('.ad-form__reset');
 const address = document.querySelector('#address');
+const mapFilters = document.querySelector('.map__filters');
 
 const LAT = 35.6895;
 const LNG = 139.752465;
@@ -54,23 +57,6 @@ mainPinMarker.on('moveend', (evt) => { // обработчик события mo
   address.value = `${temporaryAddress.lat.toFixed(5)}, ${temporaryAddress.lng.toFixed(5)}`;
 });
 
-// сброс карты(RESET)
-const onButtonResetClick = () => {
-  mainPinMarker.setLatLng({ //  setLatLng() вернуть метку на своё изначальное место с нужными координатами
-    lat: PIN_LATITUDE,
-    lng: PIN_LOMGITUDE,
-  });
-
-  map.setView({ //  возвращение к начальным значениям масштаба и центра карты
-    lat: 35.6895,
-    lng: 139.692,
-  }, SCALE);
-};
-
-resetButton.addEventListener('click', () => {
-  onButtonResetClick();
-});
-
 
 // ****************************** Дополнительные пины **********************************
 
@@ -80,6 +66,8 @@ const icon = L.icon({
   iconSize: [40, 40],
   iconAnchor: [20, 40],
 });
+
+const pointsGroup = L.layerGroup().addTo(map);
 
 const creatingPoints = (data, card) => { // Добавление второстепенных пинов на карту
   data.forEach((point) => {
@@ -94,7 +82,7 @@ const creatingPoints = (data, card) => { // Добавление второст�
       },
     );
 
-    marker.addTo(map)
+    marker.addTo(pointsGroup)
       .bindPopup(card(point)); // привяжем к каждой нашей метке балун bindPopup(), чтобы по клику на неё показывалась информация о месте
   });
 };
@@ -102,10 +90,23 @@ const creatingPoints = (data, card) => { // Добавление второст�
 
 //***********************************************Отрисовка нужных пинов, нормальная работа, обработка ошибок */
 
+const removePoints = () => { // Удаление пинов
+  pointsGroup.clearLayers();
+};
+
+const onMapFilterChange = () => {
+  removePoints(); // удаляет метки
+
+  creatingPoints(filterData(adverts), renderCard); // Создаёт метки уже с фильтрами
+};
+
 const onSuccess = (data) => {
   adverts = data.slice();
 
-  creatingPoints(adverts.slice(0, FINISH_ELEMNT), renderCard);
+  disablingFormMapFilter(); // Разблокируеи фильтрацию
+  creatingPoints(adverts.slice(0, FINISH_ELEMNT), renderCard); // Создаёт 10 меток сразу
+
+  mapFilters.addEventListener('change', debounce(onMapFilterChange)); // debounce - «устранение дребезга»
 };
 
 const onError = () => {
@@ -121,6 +122,28 @@ map.on('load', () => { //  «инициализация», и когда кар�
     lng: LNG,
   }, SCALE);
 
+
+// сброс карты(RESET)
+const onButtonResetClick = () => {
+  mainPinMarker.setLatLng({ //  setLatLng() вернуть метку на своё изначальное место с нужными координатами
+    lat: PIN_LATITUDE,
+    lng: PIN_LOMGITUDE,
+  });
+
+  map.setView({ //  возвращение к начальным значениям масштаба и центра карты
+    lat: 35.6895,
+    lng: 139.692,
+  }, SCALE);
+
+  removePoints(); // удаляет метки
+
+  creatingPoints(adverts.slice(0, FINISH_ELEMNT), renderCard); // Создаёт 10 меток сразу
+
+};
+
+resetButton.addEventListener('click', () => {
+  onButtonResetClick();
+});
 
 export {
   onButtonResetClick, // Сброс главного пина
