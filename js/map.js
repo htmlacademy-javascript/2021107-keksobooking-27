@@ -57,23 +57,6 @@ mainPinMarker.on('moveend', (evt) => { // обработчик события mo
   address.value = `${temporaryAddress.lat.toFixed(5)}, ${temporaryAddress.lng.toFixed(5)}`;
 });
 
-// сброс карты(RESET)
-const onButtonResetClick = () => {
-  mainPinMarker.setLatLng({ //  setLatLng() вернуть метку на своё изначальное место с нужными координатами
-    lat: PIN_LATITUDE,
-    lng: PIN_LOMGITUDE,
-  });
-
-  map.setView({ //  возвращение к начальным значениям масштаба и центра карты
-    lat: 35.6895,
-    lng: 139.692,
-  }, SCALE);
-};
-
-resetButton.addEventListener('click', () => {
-  onButtonResetClick();
-});
-
 
 // ****************************** Дополнительные пины **********************************
 
@@ -139,6 +122,28 @@ map.on('load', () => { //  «инициализация», и когда кар�
     lng: LNG,
   }, SCALE);
 
+
+// сброс карты(RESET)
+const onButtonResetClick = () => {
+  mainPinMarker.setLatLng({ //  setLatLng() вернуть метку на своё изначальное место с нужными координатами
+    lat: PIN_LATITUDE,
+    lng: PIN_LOMGITUDE,
+  });
+
+  map.setView({ //  возвращение к начальным значениям масштаба и центра карты
+    lat: 35.6895,
+    lng: 139.692,
+  }, SCALE);
+
+  removePoints(); // удаляет метки
+
+  creatingPoints(adverts.slice(0, FINISH_ELEMNT), renderCard); // Создаёт 10 меток сразу
+
+};
+
+resetButton.addEventListener('click', () => {
+  onButtonResetClick();
+});
 
 export {
   onButtonResetClick, // Сброс главного пина

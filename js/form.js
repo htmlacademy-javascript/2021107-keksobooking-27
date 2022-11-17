@@ -4,7 +4,8 @@ import { makeRequest } from './api.js';
 
 
 // родитель форма
-const adForm = document.querySelector('.ad-form');
+const adForm = document.querySelector('.ad-form'); // форма объявления
+const mapForm = document.querySelector('.map__filters'); // форма фильтрации
 const mapFilter = document.querySelector('.map__filters');
 const resetButton = adForm.querySelector('.ad-form__reset');
 const price = adForm.querySelector('#price'); // Цена за ночь
@@ -176,7 +177,8 @@ timeout.addEventListener('change', onTimeOutChange); // подстановка t
 //**************************************Общие вызовы, нажатия кнопок************************ */
 
 const resettingForm = () => {
-  adForm.reset();
+  adForm.reset(); // сброс формы объявления
+  mapForm.reset(); // сброс формы фильрации
   price.placeholder = 0;
   pristine.reset();
 };
@@ -213,6 +215,7 @@ const onUserFormSubmit = (oneAction, twoAction) => { // oneAction-нужно д�
     }
   });
 };
+
 
 export {
   disablingAdForm, // включения/выключения формы adForm
