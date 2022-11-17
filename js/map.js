@@ -1,6 +1,6 @@
 import { disablingAdForm, disablingFormMapFilter } from './form.js';
 import { makeRequest } from './api.js';
-import { showAlert } from './utils.js';
+import { showAlert, debounce } from './utils.js';
 import { renderCard } from './offer-card.js';
 import { filterData } from './sort-points.js';
 
@@ -106,7 +106,7 @@ const onSuccess = (data) => {
   disablingFormMapFilter(); // Разблокируеи фильтрацию
   creatingPoints(adverts.slice(0, FINISH_ELEMNT), renderCard); // Создаёт 10 меток сразу
 
-  mapFilters.addEventListener('change', onMapFilterChange);
+  mapFilters.addEventListener('change', debounce(onMapFilterChange)); // debounce - «устранение дребезга»
 };
 
 const onError = () => {
