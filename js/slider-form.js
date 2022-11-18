@@ -2,7 +2,6 @@ const sliderElement = document.querySelector('.ad-form__slider');
 const price = document.querySelector('#price'); // Цена за ночь
 const resetButton = document.querySelector('.ad-form__reset');
 
-// price.value = 1000; // Начальное значение в поле ввода
 
 noUiSlider.create(sliderElement, { // Создадим слайдер
   range: {

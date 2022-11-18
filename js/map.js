@@ -2,7 +2,7 @@ import { disablingAdForm, disablingFormMapFilter } from './form.js';
 import { makeRequest } from './api.js';
 import { showAlert, debounce } from './utils.js';
 import { renderCard } from './offer-card.js';
-import { filterData } from './sort-points.js';
+import { filteringData } from './sort-points.js';
 
 
 const resetButton = document.querySelector('.ad-form__reset');
@@ -97,7 +97,7 @@ const removePoints = () => { // Удаление пинов
 const onMapFilterChange = () => {
   removePoints(); // удаляет метки
 
-  creatingPoints(filterData(adverts), renderCard); // Создаёт метки уже с фильтрами
+  creatingPoints(filteringData(adverts), renderCard); // Создаёт метки уже с фильтрами
 };
 
 const onSuccess = (data) => {
