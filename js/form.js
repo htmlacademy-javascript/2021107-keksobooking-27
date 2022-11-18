@@ -1,6 +1,7 @@
 import { numDecline } from './utils.js';
 import { getSuccessfulDownloadForm, getFailedDownloadForm } from './message-user.js';
 import { makeRequest } from './api.js';
+import { resetImages } from './avatar.js';
 
 
 // родитель форма
@@ -188,6 +189,7 @@ const onResetClick = () => {
   resetButton.addEventListener('click', (evt) => {
     evt.preventDefault(); // отменяется нажатие кнопки
     resettingForm();
+    resetImages(); // Сброс изображения
   });
 };
 
