@@ -45,6 +45,7 @@ fileChooserHouse.addEventListener('change', () => {
 });
 
 const resetImages = () => {
+  previewAccaunt.innerHTML = '';
   previewAccaunt.src = DEFAULT_AVATAR;
   previewHouse.innerHTML = '';
 };
