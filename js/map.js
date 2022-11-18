@@ -131,8 +131,8 @@ const onButtonResetClick = () => {
   });
 
   map.setView({ //  возвращение к начальным значениям масштаба и центра карты
-    lat: 35.6895,
-    lng: 139.692,
+    lat: LAT,
+    lng: LNG,
   }, SCALE);
 
   removePoints(); // удаляет метки
