@@ -2,6 +2,7 @@ import { numDecline } from './utils.js';
 import { getSuccessfulDownloadForm, getFailedDownloadForm } from './message-user.js';
 import { makeRequest } from './api.js';
 import { resetImages } from './avatar.js';
+import { resettingSlider } from './slider-form.js';
 
 
 // родитель форма
@@ -204,6 +205,7 @@ const unblockSubmitButton = () => { // Разблокирует кнопку о�
   submitButton.textContent = 'Опубликовать';
 };
 
+
 // кнопка отправить
 const onUserFormSubmit = (oneAction, twoAction) => { // oneAction-нужно для reset form, twoAction-нужно для reset пина
   adForm.addEventListener('submit', (evt) => {
@@ -212,6 +214,7 @@ const onUserFormSubmit = (oneAction, twoAction) => { // oneAction-нужно д�
     if (isValid) {
       const formData = new FormData(evt.target); // если пользователь ввёл валидные данные, соберём их с помощью FormData
       blockSubmitButton();
+      resettingSlider();
       // fetch для отправки данных
       makeRequest(() => { oneAction(); twoAction(); getSuccessfulDownloadForm(); unblockSubmitButton(); }, () => { getFailedDownloadForm(); unblockSubmitButton(); }, 'POST', formData);
     }
