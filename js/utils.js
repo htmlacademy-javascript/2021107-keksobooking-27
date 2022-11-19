@@ -13,8 +13,7 @@ const getRandomArbitrary = (min, max) => {
 
 
 // Функция, возвращающая случайное число с плавающей точкой
-// floatDigits = 1 - значение по умолчанию
-const getRandomArbitraryFloat = (min, max, floatDigits = 1) => {
+const getRandomArbitraryFloat = (min, max, floatDigits = 1) => { // floatDigits = 1 - значение по умолчанию
   // проверка на правильность исходных данных
   if (min < 0 || max < 0 || floatDigits < 0) { return NaN; }
   else if (min >= max) { [min, max] = [max, min]; }
@@ -67,9 +66,9 @@ const showAlert = (message) => {
 const isEscapeKey = (evt) => evt.key === 'Escape'; // нажатие Escape
 const isEnterKey = (evt) => evt.key === 'Enter'; // // нажатие Enter
 
+
 // Функция взята из интернета и доработана
 // Источник - https://www.freecodecamp.org/news/javascript-debounce-example
-
 const debounce = (callback, timeoutDelay = 500) => {
   // Используем замыкания, чтобы id таймаута у нас навсегда приклеился
   // к возвращаемой функции с setTimeout, тогда мы его сможем перезаписывать
@@ -87,6 +86,7 @@ const debounce = (callback, timeoutDelay = 500) => {
     // пока действие совершается чаще, чем переданная задержка timeoutDelay
   };
 };
+
 
 export {
   getRandomArbitrary,// возвращающает случайное целое число из переданного диапазона включительно

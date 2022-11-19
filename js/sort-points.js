@@ -30,16 +30,16 @@ const filterRules = {
   },
 };
 
-const filterData = (data) => {
+const filteringData = (data) => {
   const filteredOffers = [];
   let i = 0;
-  let result;
+  let isResult;
 
   while (i < data.length && filteredOffers.length < FINISH_ELEMNT) {
-    result = mapFilters.every((filter) => (filter.value === DEFAULT_VALUE) ? true : filterRules[filter.id](data[i], filter));
+    isResult = mapFilters.every((filter) => (filter.value === DEFAULT_VALUE) ? true : filterRules[filter.id](data[i], filter));
 
 
-    if (result) {
+    if (isResult) {
       filteredOffers.push(data[i]);
     }
 
@@ -51,5 +51,5 @@ const filterData = (data) => {
 
 
 export {
-  filterData, // фильтрация по выбранным полям
+  filteringData, // фильтрация по выбранным полям
 };

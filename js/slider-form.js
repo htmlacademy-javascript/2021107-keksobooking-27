@@ -1,16 +1,18 @@
 const sliderElement = document.querySelector('.ad-form__slider');
 const price = document.querySelector('#price'); // Цена за ночь
 const resetButton = document.querySelector('.ad-form__reset');
+const MINIMUM_VALUE = 0;
+const MAXIMUM_VALUE = 100000;
+const STEP_CHANGE = 1;
 
-// price.value = 1000; // Начальное значение в поле ввода
 
 noUiSlider.create(sliderElement, { // Создадим слайдер
   range: {
-    min: 0,
-    max: 100000,
+    min: MINIMUM_VALUE,
+    max: MAXIMUM_VALUE,
   },
   start: price.placeholder,
-  step: 1,
+  step: STEP_CHANGE,
   connect: 'lower', // с какой стороны закрашивать слайдер
   format: { //  методы форматирования
     to: function (value) {
@@ -26,9 +28,19 @@ sliderElement.noUiSlider.on('slide', () => { // слушатель событи�
   price.value = sliderElement.noUiSlider.get();
 });
 
+// сброс слайдера
+const resettingSlider = () => {
+  sliderElement.noUiSlider.reset();
+};
+
 // сброс карты(RESET)
 resetButton.addEventListener('click', (evt) => {
   evt.preventDefault();
 
-  sliderElement.noUiSlider.reset(); // начальное значение устанавливать вызовом метода .set() у свойства noUiSlider
+  // sliderElement.noUiSlider.reset(); // начальное значение устанавливать вызовом метода .set() у свойства noUiSlider
+  resettingSlider();
 });
+
+export {
+  resettingSlider, // Сброс слайдера в начало
+};

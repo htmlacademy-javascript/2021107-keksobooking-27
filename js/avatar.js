@@ -16,10 +16,10 @@ fileChooserAccaunt.addEventListener('change', () => {
   const fileName = file.name.toLowerCase(); //  имя файла приведём к строчным буквам
 
   // оканчивается ли имя файла одним из допустимых расширений
-  const matches = isValidType(fileName);
+  const isMatches = isValidType(fileName);
 
   // Метод some возвращает булево значение, поэтому мы можем результат выполнения этого метода использовать в условии
-  if (matches) {
+  if (isMatches) {
     previewAccaunt.src = URL.createObjectURL(file); // URL.createObjectURL() позволяет сделать ссылку на содержимое
   }
 });
@@ -45,6 +45,7 @@ fileChooserHouse.addEventListener('change', () => {
 });
 
 const resetImages = () => {
+  previewAccaunt.innerHTML = '';
   previewAccaunt.src = DEFAULT_AVATAR;
   previewHouse.innerHTML = '';
 };
