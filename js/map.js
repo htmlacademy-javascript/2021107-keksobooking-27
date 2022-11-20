@@ -5,9 +5,10 @@ import { renderCard } from './offer-card.js';
 import { filteringData } from './sort-points.js';
 
 
-const resetButton = document.querySelector('.ad-form__reset');
 const address = document.querySelector('#address');
 const mapFilters = document.querySelector('.map__filters');
+const resetButton = document.querySelector('.ad-form__reset');
+
 
 const LAT = 35.6895;
 const LNG = 139.752465;

@@ -3,6 +3,8 @@ import { getSuccessfulDownloadForm, getFailedDownloadForm } from './message-user
 import { makeRequest } from './api.js';
 import { resetImages } from './avatar.js';
 import { resettingSlider } from './slider-form.js';
+import { onButtonResetClick } from './map.js';
+onButtonResetClick();
 
 
 // родитель форма
@@ -43,6 +45,7 @@ const MIN_PRICE = {
   'palace': 10000
 };
 
+const {bungalow, flat, hotel, house, palace} = MIN_PRICE;
 
 // Функция добавления/удаления disabled у элементов с классами fieldset, select.map__filter
 const disablingEnablingForm = (form) => {
@@ -123,16 +126,16 @@ roomNumber.addEventListener('change', onRoomNumberChange);
 
 const onPlaceholderChange = () => {
   switch (type.value) {
-    case 'bungalow': price.min = 0;
+    case 'bungalow': price.min = bungalow;
       break;
-    case 'flat': price.min = 1000;
+    case 'flat': price.min = flat;
       break;
-    case 'hotel': price.min = 3000;
+    case 'hotel': price.min = hotel;
       break;
-    case 'house': price.min = 5000;
+    case 'house': price.min = house;
       break;
     default:
-      price.min = 10000;
+      price.min = palace;
   }
   price.placeholder = price.min;
 };
