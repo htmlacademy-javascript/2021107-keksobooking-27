@@ -30,14 +30,13 @@ sliderElement.noUiSlider.on('slide', () => { // слушатель событи�
 
 // сброс слайдера
 const resettingSlider = () => {
-  sliderElement.noUiSlider.reset();
+  sliderElement.noUiSlider.reset(); // начальное значение устанавливать вызовом метода .set() у свойства noUiSlider
 };
 
 // сброс карты(RESET)
 resetButton.addEventListener('click', (evt) => {
   evt.preventDefault();
 
-  // sliderElement.noUiSlider.reset(); // начальное значение устанавливать вызовом метода .set() у свойства noUiSlider
   resettingSlider();
 });
 
