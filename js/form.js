@@ -197,7 +197,7 @@ const onResetClick = () => {
   });
 };
 
-onResetClick();
+onResetClick(); // кнопка сброс
 
 const blockSubmitButton = () => { // Блокирует кнопку отправить
   submitButton.disabled = true;
@@ -210,8 +210,7 @@ const unblockSubmitButton = () => { // Разблокирует кнопку о�
 };
 
 
-// кнопка отправить
-const onUserFormSubmit = (oneAction, twoAction) => { // oneAction-нужно для reset form, twoAction-нужно для reset пина
+const onUserFormSubmit = () => { // oneAction-нужно для reset form, twoAction-нужно для reset пина
   adForm.addEventListener('submit', (evt) => {
     evt.preventDefault(); // отменяется нажатие кнопки
     const isValid = pristine.validate();
@@ -219,18 +218,16 @@ const onUserFormSubmit = (oneAction, twoAction) => { // oneAction-нужно д�
       const formData = new FormData(evt.target); // если пользователь ввёл валидные данные, соберём их с помощью FormData
       blockSubmitButton();
       resettingSlider();
-      resetImages();
       // fetch для отправки данных
-      makeRequest(() => { oneAction(); twoAction(); getSuccessfulDownloadForm(); unblockSubmitButton(); }, () => { getFailedDownloadForm(); unblockSubmitButton(); }, 'POST', formData);
+      makeRequest(() => { resettingForm(); onButtonResetClick(); resetImages(); getSuccessfulDownloadForm(); unblockSubmitButton(); }, () => { getFailedDownloadForm(); unblockSubmitButton(); }, 'POST', formData);
     }
   });
 };
 
 
+onUserFormSubmit();
+
 export {
   disablingAdForm, // включения/выключения формы adForm
   disablingFormMapFilter, // включения/выключения формы mapFilter
-  onUserFormSubmit, // Кнопка "отправить"
-  resettingForm, // сброс форм
-  onResetClick // Кнопка сбросить
 };
