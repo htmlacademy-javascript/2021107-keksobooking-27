@@ -1,19 +1,14 @@
 import { isEscapeKey, isEnterKey } from './utils.js';
 
 const body = document.querySelector('body');
-// находим шаблон id="success" и в нём контейнер success
 const patternSuccess = document.querySelector('#success').content.querySelector('.success');
 const patternFailed = document.querySelector('#error').content.querySelector('.error');
 
 
-//**********************Удачная отправка формы************************* */
-
-// Удаление окна по click мышки
 const onSuccessMessageClick = () => {
   body.removeChild(body.querySelector('.success'));
 };
 
-// Удаление окна по ESC
 const onSuccessMessageEscKeydown = (evt) => {
   if (isEscapeKey(evt)) {
     evt.preventDefault();
@@ -22,7 +17,6 @@ const onSuccessMessageEscKeydown = (evt) => {
   }
 };
 
-// Удаление обработчика
 const removeEscKeydown = () => {
   document.removeEventListener('keydown', onSuccessMessageEscKeydown);
 };
@@ -35,17 +29,13 @@ const closeOpenSuccessMessage = () => {
 };
 
 const getSuccessfulDownloadForm = () => {
-  // клонирую patternSuccess со всем содержимым
   const ticetElement = patternSuccess.cloneNode(true);
   body.append(ticetElement);
 
-  closeOpenSuccessMessage(); // добавил удаление по ESC и click мышки
+  closeOpenSuccessMessage();
 };
 
 
-//**********************Неудачная отправка формы************************* */
-
-// Удаление окна по ESC
 const onFailedMessageEscKeydown = (evt) => {
   if (isEscapeKey(evt)) {
     evt.preventDefault();
@@ -55,13 +45,11 @@ const onFailedMessageEscKeydown = (evt) => {
 };
 
 
-// Удаление окна по click мышки
 const onFailedMessageClick = () => {
   body.removeChild(body.querySelector('.error'));
 
 };
 
-// Удаление окна по Enter
 const onFailedMessageEnterKeydown = (evt) => {
   if (isEnterKey(evt)) {
     evt.preventDefault();
@@ -78,18 +66,15 @@ const closeOpenFailedMessage = (buttonErrorForm) => {
 
 
 const getFailedDownloadForm = () => {
-  // клонирую patternSuccess со всем содержимым
   const ticetElement = patternFailed.cloneNode(true);
   body.append(ticetElement);
 
-  closeOpenFailedMessage(document.querySelector('.error__button')); // добавил удаление по ESC, click мышки; Enter(можно впринципе не добавлять, работает и так)
+  closeOpenFailedMessage(document.querySelector('.error__button'));
 };
 
 
-//**********************Общие вызовы************************* */
-
 export {
-  getSuccessfulDownloadForm, // удачная загрузка
-  getFailedDownloadForm, // неудачная загрузка
+  getSuccessfulDownloadForm,
+  getFailedDownloadForm,
 };
 

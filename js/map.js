@@ -16,49 +16,42 @@ const PIN_LOMGITUDE = 139.73785;
 const SCALE = 11;
 const FINISH_ELEMNT = 10;
 const TEXT_ALLERT_MESSAGE = 'Данные не загрузились. Попробуйте ещё раз.';
-let adverts = []; // переменная для хранения получеенныч с сервера даннных
+let adverts = [];
 
 
-// Создадим карту
 const map = L.map('map-canvas');
-L.tileLayer( //  создаём нужный слой  командой L.tileLayer(), изображениями карт от OpenStreetMap добавив как слой на нашу созданную карту
+L.tileLayer(
   'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
   {
     attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
   },
-).addTo(map); // добавляем слой на карту методом addTo()
+).addTo(map);
 
 
-// *******************************************Главный пин**************************************
-
-const mainPinIcon = L.icon({ //  создаём L.icon() то, что нужно добавить на карту
+const mainPinIcon = L.icon({
   iconUrl: './img/main-pin.svg',
   iconSize: [52, 52],
-  iconAnchor: [26, 52], // координаты кончика хвоста метки
+  iconAnchor: [26, 52],
 });
 
-const mainPinMarker = L.marker( // добавить метку
+const mainPinMarker = L.marker(
   {
     lat: PIN_LATITUDE,
     lng: PIN_LOMGITUDE,
   },
   {
-    draggable: true, // метку можно передвигать по карте
-    icon: mainPinIcon, // добавляем icon: mainPinIcon в параметры маркера
+    draggable: true,
+    icon: mainPinIcon,
   },
 );
 
 
-mainPinMarker.addTo(map); // затем добавляем на карту addTo()
+mainPinMarker.addTo(map);
 
-// перемещение пина
-mainPinMarker.on('moveend', (evt) => { // обработчик события moveen - означает, что пользователь закончил передвигать метку
-  const temporaryAddress = evt.target.getLatLng(); // метод getLatLng() возвращает объект с новыми координатами
+mainPinMarker.on('moveend', (evt) => {
+  const temporaryAddress = evt.target.getLatLng();
   address.value = `${temporaryAddress.lat.toFixed(5)}, ${temporaryAddress.lng.toFixed(5)}`;
 });
-
-
-// ****************************** Дополнительные пины **********************************
 
 
 const icon = L.icon({
@@ -69,7 +62,7 @@ const icon = L.icon({
 
 const pointsGroup = L.layerGroup().addTo(map);
 
-const creatingPoints = (data, card) => { // Добавление второстепенных пинов на карту
+const creatingPoints = (data, card) => {
   data.forEach((point) => {
     const { lat, lng } = point.location;
     const marker = L.marker(
@@ -83,38 +76,36 @@ const creatingPoints = (data, card) => { // Добавление второст�
     );
 
     marker.addTo(pointsGroup)
-      .bindPopup(card(point)); // привяжем к каждой нашей метке балун bindPopup(), чтобы по клику на неё показывалась информация о месте
+      .bindPopup(card(point));
   });
 };
 
 
-//***********************************************Отрисовка нужных пинов, нормальная работа, обработка ошибок */
-
-const removePoints = () => { // Удаление пинов
+const removePoints = () => {
   pointsGroup.clearLayers();
 };
 
 const onMapFilterChange = () => {
-  removePoints(); // удаляет метки
+  removePoints();
 
-  creatingPoints(filteringData(adverts), renderCard); // Создаёт метки уже с фильтрами
+  creatingPoints(filteringData(adverts), renderCard);
 };
 
 const onSuccess = (data) => {
   adverts = data.slice();
 
-  disablingFormMapFilter(); // Разблокируеи фильтрацию
-  creatingPoints(adverts.slice(0, FINISH_ELEMNT), renderCard); // Создаёт 10 меток сразу
+  disablingFormMapFilter();
+  creatingPoints(adverts.slice(0, FINISH_ELEMNT), renderCard);
 
-  mapFilters.addEventListener('change', debounce(onMapFilterChange)); // debounce - «устранение дребезга»
+  mapFilters.addEventListener('change', debounce(onMapFilterChange));
 };
 
 const onError = () => {
   showAlert(TEXT_ALLERT_MESSAGE);
 };
 
-map.on('load', () => { //  «инициализация», и когда карта будет готова
-  disablingAdForm(); // разблокируем форму
+map.on('load', () => {
+  disablingAdForm();
   makeRequest(onSuccess, onError, 'GET');
 })
   .setView({
@@ -123,26 +114,25 @@ map.on('load', () => { //  «инициализация», и когда кар�
   }, SCALE);
 
 
-// сброс карты(RESET)
 const onButtonResetClick = () => {
-  mainPinMarker.setLatLng({ //  setLatLng() вернуть метку на своё изначальное место с нужными координатами
+  mainPinMarker.setLatLng({
     lat: PIN_LATITUDE,
     lng: PIN_LOMGITUDE,
   });
 
-  map.setView({ //  возвращение к начальным значениям масштаба и центра карты
+  map.setView({
     lat: LAT,
     lng: LNG,
   }, SCALE);
 
-  removePoints(); // удаляет метки
+  removePoints();
 
-  creatingPoints(adverts.slice(0, FINISH_ELEMNT), renderCard); // Создаёт 10 меток сразу
+  creatingPoints(adverts.slice(0, FINISH_ELEMNT), renderCard);
 
 };
 
 
 export {
-  onButtonResetClick, // Сброс главного пина
+  onButtonResetClick,
 };
 

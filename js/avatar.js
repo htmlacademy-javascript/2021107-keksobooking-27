@@ -6,21 +6,18 @@ const previewHouse = document.querySelector('.ad-form__photo');
 const DEFAULT_AVATAR = '../img/muffin-grey.svg';
 
 
-const FILE_TYPES = ['jpg', 'jpeg', 'png', 'gif']; // допустимыми расширениями
+const FILE_TYPES = ['jpg', 'jpeg', 'png', 'gif'];
 
-const isValidType = (file) => FILE_TYPES.some((it) => file.endsWith(it)); // endsWith()Метод определяет, заканчивается ли строка символами указанной строки
+const isValidType = (file) => FILE_TYPES.some((it) => file.endsWith(it));
 
 fileChooserAccaunt.addEventListener('change', () => {
-  const file = fileChooserAccaunt.files[0]; // единственный в списке файл получить по индексу, он у него будет всегда 0
-  // name — свойство, в котором хранится имя файла
-  const fileName = file.name.toLowerCase(); //  имя файла приведём к строчным буквам
+  const file = fileChooserAccaunt.files[0];
+  const fileName = file.name.toLowerCase();
 
-  // оканчивается ли имя файла одним из допустимых расширений
   const isMatches = isValidType(fileName);
 
-  // Метод some возвращает булево значение, поэтому мы можем результат выполнения этого метода использовать в условии
   if (isMatches) {
-    previewAccaunt.src = URL.createObjectURL(file); // URL.createObjectURL() позволяет сделать ссылку на содержимое
+    previewAccaunt.src = URL.createObjectURL(file);
   }
 });
 
