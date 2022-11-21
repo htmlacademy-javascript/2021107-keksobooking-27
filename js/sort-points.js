@@ -12,7 +12,7 @@ const priceHousing = {
   },
   high: {
     start: 50000,
-    end: Infinity, // числовым значением, представляющим бесконечность
+    end: Infinity,
   },
 };
 
@@ -21,11 +21,11 @@ const mapFilters = Array.from(document.querySelector('.map__filters').querySelec
 const filterRules = {
   'housing-type': (data, filter) => filter.value === data.offer.type,
   'housing-price': (data, filter) => data.offer.price >= priceHousing[filter.value].start && data.offer.price < priceHousing[filter.value].end,
-  'housing-rooms': (data, filter) => +filter.value === data.offer.rooms, // value преобразовываем в число
+  'housing-rooms': (data, filter) => +filter.value === data.offer.rooms,
   'housing-guests': (data, filter) => +filter.value === data.offer.guests,
   'housing-features': (data, filter) => {
-    let featuresChecked = []; // выбранные поля всё время меняются поэтому let
-    featuresChecked = Array.from(filter.querySelectorAll('input[type="checkbox"]:checked')); // выбранные поля всё время меняются поэтому let
+    let featuresChecked = [];
+    featuresChecked = Array.from(filter.querySelectorAll('input[type="checkbox"]:checked'));
     return data.offer.features ? featuresChecked.every((checkbox) => data.offer.features.includes(checkbox.value)) : !(featuresChecked.length > 0);
   },
 };
@@ -51,5 +51,5 @@ const filteringData = (data) => {
 
 
 export {
-  filteringData, // фильтрация по выбранным полям
+  filteringData,
 };
