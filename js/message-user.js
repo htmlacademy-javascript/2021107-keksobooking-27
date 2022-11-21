@@ -8,26 +8,30 @@ const patternFailed = document.querySelector('#error').content.querySelector('.e
 
 //**********************Удачная отправка формы************************* */
 
+// Удаление окна по click мышки
+const onSuccessMessageClick = () => {
+  body.removeChild(body.querySelector('.success'));
+};
+
 // Удаление окна по ESC
 const onSuccessMessageEscKeydown = (evt) => {
   if (isEscapeKey(evt)) {
     evt.preventDefault();
     body.removeChild(body.querySelector('.success'));
-
+    document.removeEventListener('click', onSuccessMessageClick);
   }
 };
 
-
-// Удаление окна по click мышки
-const onSuccessMessageClick = () => {
-  body.removeChild(body.querySelector('.success'));
-
+// Удаление обработчика
+const removeEscKeydown = () => {
+  document.removeEventListener('keydown', onSuccessMessageEscKeydown);
 };
 
 const closeOpenSuccessMessage = () => {
+  const successfulMessage = document.querySelector('.success');
   document.addEventListener('keydown', onSuccessMessageEscKeydown, { once: true });
-  document.addEventListener('click', onSuccessMessageClick, { once: true });
-
+  successfulMessage.addEventListener('click', onSuccessMessageClick, { once: true });
+  successfulMessage.addEventListener('click', removeEscKeydown, { once: true });
 };
 
 const getSuccessfulDownloadForm = () => {

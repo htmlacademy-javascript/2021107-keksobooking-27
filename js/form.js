@@ -4,7 +4,6 @@ import { makeRequest } from './api.js';
 import { resetImages } from './avatar.js';
 import { resettingSlider } from './slider-form.js';
 import { onButtonResetClick } from './map.js';
-onButtonResetClick();
 
 
 // родитель форма
@@ -194,9 +193,11 @@ const onResetClick = () => {
     evt.preventDefault(); // отменяется нажатие кнопки
     resettingForm();
     resetImages(); // Сброс изображения
+    onButtonResetClick();
   });
 };
 
+onResetClick();
 
 const blockSubmitButton = () => { // Блокирует кнопку отправить
   submitButton.disabled = true;
@@ -218,6 +219,7 @@ const onUserFormSubmit = (oneAction, twoAction) => { // oneAction-нужно д�
       const formData = new FormData(evt.target); // если пользователь ввёл валидные данные, соберём их с помощью FormData
       blockSubmitButton();
       resettingSlider();
+      resetImages();
       // fetch для отправки данных
       makeRequest(() => { oneAction(); twoAction(); getSuccessfulDownloadForm(); unblockSubmitButton(); }, () => { getFailedDownloadForm(); unblockSubmitButton(); }, 'POST', formData);
     }

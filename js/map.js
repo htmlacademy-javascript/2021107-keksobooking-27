@@ -7,7 +7,6 @@ import { filteringData } from './sort-points.js';
 
 const address = document.querySelector('#address');
 const mapFilters = document.querySelector('.map__filters');
-const resetButton = document.querySelector('.ad-form__reset');
 
 
 const LAT = 35.6895;
@@ -142,9 +141,6 @@ const onButtonResetClick = () => {
 
 };
 
-resetButton.addEventListener('click', () => {
-  onButtonResetClick();
-});
 
 export {
   onButtonResetClick, // Сброс главного пина
