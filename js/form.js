@@ -35,6 +35,8 @@ const GUESTS_IN_ROOM = {
   3: ['3']
 };
 
+const TYPES_OF_HOUSES = ['bungalow', 'flat', 'hotel', 'house', 'palace'];
+
 const MIN_PRICE = {
   'bungalow': 0,
   'flat': 1000,
@@ -43,7 +45,7 @@ const MIN_PRICE = {
   'palace': 10000
 };
 
-const {bungalow, flat, hotel, house, palace} = MIN_PRICE;
+const { bungalow: bungalowPrice, flat: flatPrice, hotel: hotelPrice, house: housePrice, palace: palacePrice } = MIN_PRICE;
 
 const disablingEnablingForm = (form) => {
   form.querySelectorAll('fieldset, select.map__filter').forEach((fieldItem) => {
@@ -108,16 +110,16 @@ roomNumber.addEventListener('change', onRoomNumberChange);
 
 const onPlaceholderChange = () => {
   switch (type.value) {
-    case 'bungalow': price.min = bungalow;
+    case TYPES_OF_HOUSES[0]: price.min = bungalowPrice;
       break;
-    case 'flat': price.min = flat;
+    case TYPES_OF_HOUSES[1]: price.min = flatPrice;
       break;
-    case 'hotel': price.min = hotel;
+    case TYPES_OF_HOUSES[2]: price.min = hotelPrice;
       break;
-    case 'house': price.min = house;
+    case TYPES_OF_HOUSES[3]: price.min = housePrice;
       break;
     default:
-      price.min = palace;
+      price.min = palacePrice;
   }
   price.placeholder = price.min;
 };
@@ -192,7 +194,10 @@ const onUserFormSubmit = () => {
       const formData = new FormData(evt.target);
       blockSubmitButton();
       resettingSlider();
-      makeRequest(() => { resettingForm(); onButtonResetClick(); resetImages(); getSuccessfulDownloadForm(); unblockSubmitButton(); }, () => { getFailedDownloadForm(); unblockSubmitButton(); }, 'POST', formData);
+      makeRequest(() => { resettingForm(); onButtonResetClick(); resetImages(); getSuccessfulDownloadForm(); unblockSubmitButton(); },
+        () => { getFailedDownloadForm(); unblockSubmitButton(); },
+        'POST',
+        formData);
     }
   });
 };
