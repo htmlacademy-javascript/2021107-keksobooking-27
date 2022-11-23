@@ -1,8 +1,8 @@
-import { numDecline } from './utils.js';
+import { declineNumber } from './utils.js';
 import { getSuccessfulDownloadForm, getFailedDownloadForm } from './message-user.js';
 import { makeRequest } from './api.js';
 import { resetImages } from './avatar.js';
-import { resettingSlider } from './slider-form.js';
+import { resetSlider } from './slider-form.js';
 import { onButtonResetClick } from './map.js';
 
 const WORDS = ['комната', 'комнаты', 'комнат', 'гость', 'гостя', 'гостей'];
@@ -47,23 +47,23 @@ const submitButton = adForm.querySelector('.ad-form__submit');
 const sliderElement = document.querySelector('.ad-form__slider');
 
 
-const disablingEnablingForm = (form) => {
+const disableEnablingForm = (form) => {
   form.querySelectorAll('fieldset, select.map__filter').forEach((fieldItem) => {
     fieldItem.disabled = !fieldItem.disabled;
   });
 };
 
 
-const disablingAdForm = () => {
+const disableAdForm = () => {
   adForm.classList.toggle('ad-form--disabled');
 
-  disablingEnablingForm(adForm);
+  disableEnablingForm(adForm);
 };
 
-const disablingFormMapFilter = () => {
+const disableFormMapFilter = () => {
   mapFilter.classList.toggle('ad-form--disabled');
 
-  disablingEnablingForm(mapFilter);
+  disableEnablingForm(mapFilter);
 };
 
 
@@ -77,8 +77,8 @@ const pristine = new Pristine(adForm, {
 
 const validateCapacity = () => ROOMS_TO_GUEST[roomNumber.value].includes(capacity.value);
 
-const getCapacityErrorMessage = () => `Указанное количество комнат вмещает ${ROOMS_TO_GUEST[roomNumber.value].join(' или ')} ${numDecline(+ROOMS_TO_GUEST[roomNumber.value], WORDS[3], WORDS[4], WORDS[5])}.`;
-const getRoomNumberErrorMessage = () => `Для указанного количества гостей требуется ${GUESTS_IN_ROOM[capacity.value].join(' или ')} ${numDecline(+GUESTS_IN_ROOM[capacity.value], WORDS[0], WORDS[1], WORDS[2])}.`;
+const getCapacityErrorMessage = () => `Указанное количество комнат вмещает ${ROOMS_TO_GUEST[roomNumber.value].join(' или ')} ${declineNumber(+ROOMS_TO_GUEST[roomNumber.value], WORDS[3], WORDS[4], WORDS[5])}.`;
+const getRoomNumberErrorMessage = () => `Для указанного количества гостей требуется ${GUESTS_IN_ROOM[capacity.value].join(' или ')} ${declineNumber(+GUESTS_IN_ROOM[capacity.value], WORDS[0], WORDS[1], WORDS[2])}.`;
 
 const onCapacityChange = () => {
   pristine.validate(capacity);
@@ -158,7 +158,7 @@ timein.addEventListener('change', onTimeInChange);
 timeout.addEventListener('change', onTimeOutChange);
 
 
-const resettingForm = () => {
+const resetForm = () => {
   adForm.reset();
   mapForm.reset();
   price.placeholder = 0;
@@ -168,7 +168,7 @@ const resettingForm = () => {
 const onResetClick = () => {
   resetButton.addEventListener('click', (evt) => {
     evt.preventDefault();
-    resettingForm();
+    resetForm();
     resetImages();
     onButtonResetClick();
   });
@@ -194,9 +194,9 @@ const onUserFormSubmit = () => {
     if (isValid) {
       const formData = new FormData(evt.target);
       blockSubmitButton();
-      resettingSlider();
+      resetSlider();
       makeRequest(() => {
-        resettingForm();
+        resetForm();
         onButtonResetClick();
         resetImages();
         getSuccessfulDownloadForm();
@@ -213,6 +213,6 @@ const onUserFormSubmit = () => {
 onUserFormSubmit();
 
 export {
-  disablingAdForm,
-  disablingFormMapFilter,
+  disableAdForm,
+  disableFormMapFilter,
 };

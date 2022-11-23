@@ -1,8 +1,8 @@
-import { disablingAdForm, disablingFormMapFilter } from './form.js';
+import { disableAdForm, disableFormMapFilter } from './form.js';
 import { makeRequest } from './api.js';
 import { showAlert, debounce } from './utils.js';
 import { renderCard } from './offer-card.js';
-import { filteringData } from './sort-points.js';
+import { filterData } from './sort-points.js';
 
 const LAT = 35.6895;
 const LNG = 139.752465;
@@ -61,7 +61,7 @@ const icon = L.icon({
 
 const pointsGroup = L.layerGroup().addTo(map);
 
-const creatingPoints = (data, card) => {
+const createPoints = (data, card) => {
   data.forEach((point) => {
     const { lat, lng } = point.location;
     const marker = L.marker(
@@ -87,14 +87,14 @@ const removePoints = () => {
 const onMapFilterChange = () => {
   removePoints();
 
-  creatingPoints(filteringData(adverts), renderCard);
+  createPoints(filterData(adverts), renderCard);
 };
 
 const onSuccess = (data) => {
   adverts = data.slice();
 
-  disablingFormMapFilter();
-  creatingPoints(adverts.slice(0, FINISH_ELEMNT), renderCard);
+  disableFormMapFilter();
+  createPoints(adverts.slice(0, FINISH_ELEMNT), renderCard);
 
   mapFilters.addEventListener('change', debounce(onMapFilterChange));
 };
@@ -104,7 +104,7 @@ const onError = () => {
 };
 
 map.on('load', () => {
-  disablingAdForm();
+  disableAdForm();
   makeRequest(onSuccess, onError, 'GET');
 })
   .setView({
@@ -126,7 +126,7 @@ const onButtonResetClick = () => {
 
   removePoints();
 
-  creatingPoints(adverts.slice(0, FINISH_ELEMNT), renderCard);
+  createPoints(adverts.slice(0, FINISH_ELEMNT), renderCard);
 
 };
 

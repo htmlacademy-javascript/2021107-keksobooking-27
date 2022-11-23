@@ -38,16 +38,16 @@ price.addEventListener('input', () => {
 });
 
 
-const resettingSlider = () => {
+const resetSlider = () => {
   sliderElement.noUiSlider.reset();
 };
 
 resetButton.addEventListener('click', (evt) => {
   evt.preventDefault();
 
-  resettingSlider();
+  resetSlider();
 });
 
 export {
-  resettingSlider,
+  resetSlider,
 };

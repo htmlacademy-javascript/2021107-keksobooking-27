@@ -30,7 +30,7 @@ const filterRules = {
   },
 };
 
-const filteringData = (data) => {
+const filterData = (data) => {
   const filteredOffers = [];
   let i = 0;
   let isResult;
@@ -51,5 +51,5 @@ const filteringData = (data) => {
 
 
 export {
-  filteringData,
+  filterData,
 };

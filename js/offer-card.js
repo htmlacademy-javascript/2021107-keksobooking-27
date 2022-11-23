@@ -1,4 +1,4 @@
-import { numDecline } from './utils.js';
+import { declineNumber } from './utils.js';
 
 
 const WORDS_FOR_DECLENSIONS = ['комната', 'комнаты', 'комнат', 'гость', 'гостя', 'гостей'];
@@ -14,7 +14,7 @@ const TypeOfHousing = {
 
 const { flat, bungalow, house, palace, hotel } = TypeOfHousing;
 
-const sortingHousing = (typeHouse) => {
+const getSortRooms = (typeHouse) => {
   switch (typeHouse) {
     case TYPES_OF_HOUSES[1]:
       return flat;
@@ -30,7 +30,7 @@ const sortingHousing = (typeHouse) => {
 };
 
 
-const removingUnnecessaryElements = (fullArray, needArray) => {
+const deleteUnnecessaryElements = (fullArray, needArray) => {
   fullArray.forEach((arrayItem) => {
     if (needArray.indexOf(arrayItem.classList[1].replace('popup__feature--', '')) === -1) { arrayItem.remove(); }
   });
@@ -81,7 +81,7 @@ const renderCard = ({ author, offer }) => {
 
   const type = ticetElement.querySelector('.popup__type');
   if (offer.type) {
-    type.textContent = sortingHousing(offer.type);
+    type.textContent = getSortRooms(offer.type);
   } else {
     type.remove();
   }
@@ -89,8 +89,8 @@ const renderCard = ({ author, offer }) => {
   const capacity = ticetElement.querySelector('.popup__text--capacity');
   if (offer.rooms && offer.guests) {
     capacity.textContent =
-      `${offer.rooms} ${numDecline(offer.rooms, word[0], word[1], word[2])}
-      для ${offer.guests} ${numDecline(offer.guests, word[3], word[4], word[5])}`;
+      `${offer.rooms} ${declineNumber(offer.rooms, word[0], word[1], word[2])}
+      для ${offer.guests} ${declineNumber(offer.guests, word[3], word[4], word[5])}`;
   } else {
     capacity.remove();
   }
@@ -105,7 +105,7 @@ const renderCard = ({ author, offer }) => {
   const features = ticetElement.querySelector('.popup__features');
   const feature = features.querySelectorAll('.popup__feature');
   if (offer.features) {
-    removingUnnecessaryElements(feature, offer.features);
+    deleteUnnecessaryElements(feature, offer.features);
   } else {
     features.remove();
   }
