@@ -44,6 +44,7 @@ const type = adForm.querySelector('#type');
 const timein = adForm.querySelector('[name="timein"]');
 const timeout = adForm.querySelector('[name="timeout"]');
 const submitButton = adForm.querySelector('.ad-form__submit');
+const sliderElement = document.querySelector('.ad-form__slider');
 
 
 const disablingEnablingForm = (form) => {
@@ -141,6 +142,7 @@ const onTypeChange = () => {
 
 type.addEventListener('change', onPlaceholderChange);
 type.addEventListener('change', onTypeChange);
+sliderElement.addEventListener('click', onTypeChange);
 
 
 const onTimeInChange = () => {
