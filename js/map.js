@@ -4,11 +4,6 @@ import { showAlert, debounce } from './utils.js';
 import { renderCard } from './offer-card.js';
 import { filteringData } from './sort-points.js';
 
-
-const address = document.querySelector('#address');
-const mapFilters = document.querySelector('.map__filters');
-
-
 const LAT = 35.6895;
 const LNG = 139.752465;
 const PIN_LATITUDE = 35.66399;
@@ -16,6 +11,10 @@ const PIN_LOMGITUDE = 139.73785;
 const SCALE = 11;
 const FINISH_ELEMNT = 10;
 const TEXT_ALLERT_MESSAGE = 'Данные не загрузились. Попробуйте ещё раз.';
+
+const address = document.querySelector('#address');
+const mapFilters = document.querySelector('.map__filters');
+
 let adverts = [];
 
 

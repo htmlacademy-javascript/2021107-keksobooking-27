@@ -1,12 +1,11 @@
+const DEFAULT_AVATAR = '../img/muffin-grey.svg';
+const FILE_TYPES = ['jpg', 'jpeg', 'png', 'gif'];
+
 const fileChooserAccaunt = document.querySelector('.ad-form__field input[type=file]');
 const previewAccaunt = document.querySelector('.ad-form-header__preview img');
 const fileChooserHouse = document.querySelector('.ad-form__upload input[type=file]');
 const previewHouse = document.querySelector('.ad-form__photo');
 
-const DEFAULT_AVATAR = '../img/muffin-grey.svg';
-
-
-const FILE_TYPES = ['jpg', 'jpeg', 'png', 'gif'];
 
 const isValidType = (file) => FILE_TYPES.some((it) => file.endsWith(it));
 

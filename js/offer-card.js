@@ -2,10 +2,9 @@ import { numDecline } from './utils.js';
 
 
 const WORDS_FOR_DECLENSIONS = ['комната', 'комнаты', 'комнат', 'гость', 'гостя', 'гостей'];
-
 const TYPES_OF_HOUSES = ['bungalow', 'flat', 'hotel', 'house', 'palace'];
 
-const typeOfHousing = {
+const TypeOfHousing = {
   flat: 'Квартира',
   bungalow: 'Бунгало',
   house: 'Дом',
@@ -13,7 +12,7 @@ const typeOfHousing = {
   hotel: 'Отель'
 };
 
-const { flat, bungalow, house, palace, hotel } = typeOfHousing;
+const { flat, bungalow, house, palace, hotel } = TypeOfHousing;
 
 const sortingHousing = (typeHouse) => {
   switch (typeHouse) {

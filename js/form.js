@@ -5,20 +5,6 @@ import { resetImages } from './avatar.js';
 import { resettingSlider } from './slider-form.js';
 import { onButtonResetClick } from './map.js';
 
-
-const adForm = document.querySelector('.ad-form');
-const mapForm = document.querySelector('.map__filters');
-const mapFilter = document.querySelector('.map__filters');
-const resetButton = adForm.querySelector('.ad-form__reset');
-const price = adForm.querySelector('#price');
-const roomNumber = adForm.querySelector('#room_number');
-const capacity = adForm.querySelector('#capacity');
-const type = adForm.querySelector('#type');
-const timein = adForm.querySelector('[name="timein"]');
-const timeout = adForm.querySelector('[name="timeout"]');
-const submitButton = adForm.querySelector('.ad-form__submit');
-
-
 const WORDS = ['комната', 'комнаты', 'комнат', 'гость', 'гостя', 'гостей'];
 
 const ROOMS_TO_GUEST = {
@@ -46,6 +32,19 @@ const MIN_PRICE = {
 };
 
 const { bungalow: bungalowPrice, flat: flatPrice, hotel: hotelPrice, house: housePrice, palace: palacePrice } = MIN_PRICE;
+
+const adForm = document.querySelector('.ad-form');
+const mapForm = document.querySelector('.map__filters');
+const mapFilter = document.querySelector('.map__filters');
+const resetButton = adForm.querySelector('.ad-form__reset');
+const price = adForm.querySelector('#price');
+const roomNumber = adForm.querySelector('#room_number');
+const capacity = adForm.querySelector('#capacity');
+const type = adForm.querySelector('#type');
+const timein = adForm.querySelector('[name="timein"]');
+const timeout = adForm.querySelector('[name="timeout"]');
+const submitButton = adForm.querySelector('.ad-form__submit');
+
 
 const disablingEnablingForm = (form) => {
   form.querySelectorAll('fieldset, select.map__filter').forEach((fieldItem) => {
@@ -77,8 +76,8 @@ const pristine = new Pristine(adForm, {
 
 const validateCapacity = () => ROOMS_TO_GUEST[roomNumber.value].includes(capacity.value);
 
-const getCapacityErrorMessage = () => `Указанное количество комнат вмещает ${ROOMS_TO_GUEST[roomNumber.value].join(' или ')}  ${numDecline(+ROOMS_TO_GUEST[roomNumber.value], WORDS[3], WORDS[4], WORDS[5])}.`;
-const getRoomNumberErrorMessage = () => `Для указанного количества гостей требуется ${GUESTS_IN_ROOM[capacity.value].join(' или ')}  ${numDecline(+GUESTS_IN_ROOM[capacity.value], WORDS[0], WORDS[1], WORDS[2])}.`;
+const getCapacityErrorMessage = () => `Указанное количество комнат вмещает ${ROOMS_TO_GUEST[roomNumber.value].join(' или ')} ${numDecline(+ROOMS_TO_GUEST[roomNumber.value], WORDS[3], WORDS[4], WORDS[5])}.`;
+const getRoomNumberErrorMessage = () => `Для указанного количества гостей требуется ${GUESTS_IN_ROOM[capacity.value].join(' или ')} ${numDecline(+GUESTS_IN_ROOM[capacity.value], WORDS[0], WORDS[1], WORDS[2])}.`;
 
 const onCapacityChange = () => {
   pristine.validate(capacity);
@@ -194,10 +193,16 @@ const onUserFormSubmit = () => {
       const formData = new FormData(evt.target);
       blockSubmitButton();
       resettingSlider();
-      makeRequest(() => { resettingForm(); onButtonResetClick(); resetImages(); getSuccessfulDownloadForm(); unblockSubmitButton(); },
-        () => { getFailedDownloadForm(); unblockSubmitButton(); },
-        'POST',
-        formData);
+      makeRequest(() => {
+        resettingForm();
+        onButtonResetClick();
+        resetImages();
+        getSuccessfulDownloadForm();
+        unblockSubmitButton();
+      }, () => {
+        getFailedDownloadForm();
+        unblockSubmitButton();
+      }, 'POST', formData);
     }
   });
 };
