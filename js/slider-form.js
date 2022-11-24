@@ -25,13 +25,10 @@ noUiSlider.create(sliderElement, {
   },
 });
 
-const getChangeSlider = () => {
-  sliderElement.noUiSlider.on('slide', () => {
-    price.value = sliderElement.noUiSlider.get();
-  });
-};
+sliderElement.noUiSlider.on('slide', () => {
+  price.value = sliderElement.noUiSlider.get();
+});
 
-getChangeSlider();
 
 price.addEventListener('input', () => {
   sliderElement.noUiSlider.set(price.value);

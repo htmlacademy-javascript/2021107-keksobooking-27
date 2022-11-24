@@ -3,7 +3,7 @@ import { getSuccessfulDownloadForm, getFailedDownloadForm } from './message-user
 import { makeRequest } from './api.js';
 import { resetImages } from './avatar.js';
 import { resetSlider } from './slider-form.js';
-import { onButtonResetClick } from './map.js';
+import { resetPointsOnMap } from './map.js';
 
 const WORDS = ['комната', 'комнаты', 'комнат', 'гость', 'гостя', 'гостей'];
 
@@ -165,16 +165,13 @@ const resetForm = () => {
   pristine.reset();
 };
 
-const onResetClick = () => {
-  resetButton.addEventListener('click', (evt) => {
-    evt.preventDefault();
-    resetForm();
-    resetImages();
-    onButtonResetClick();
-  });
-};
+resetButton.addEventListener('click', (evt) => {
+  evt.preventDefault();
+  resetForm();
+  resetImages();
+  resetPointsOnMap();
+});
 
-onResetClick();
 
 const blockSubmitButton = () => {
   submitButton.disabled = true;
@@ -187,30 +184,26 @@ const unblockSubmitButton = () => {
 };
 
 
-const onUserFormSubmit = () => {
-  adForm.addEventListener('submit', (evt) => {
-    evt.preventDefault();
-    const isValid = pristine.validate();
-    if (isValid) {
-      const formData = new FormData(evt.target);
-      blockSubmitButton();
-      resetSlider();
-      makeRequest(() => {
-        resetForm();
-        onButtonResetClick();
-        resetImages();
-        getSuccessfulDownloadForm();
-        unblockSubmitButton();
-      }, () => {
-        getFailedDownloadForm();
-        unblockSubmitButton();
-      }, 'POST', formData);
-    }
-  });
-};
+adForm.addEventListener('submit', (evt) => {
+  evt.preventDefault();
+  const isValid = pristine.validate();
+  if (isValid) {
+    const formData = new FormData(evt.target);
+    blockSubmitButton();
+    resetSlider();
+    makeRequest(() => {
+      resetForm();
+      resetPointsOnMap();
+      resetImages();
+      getSuccessfulDownloadForm();
+      unblockSubmitButton();
+    }, () => {
+      getFailedDownloadForm();
+      unblockSubmitButton();
+    }, 'POST', formData);
+  }
+});
 
-
-onUserFormSubmit();
 
 export {
   disableAdForm,

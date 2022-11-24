@@ -84,11 +84,11 @@ const removePoints = () => {
   pointsGroup.clearLayers();
 };
 
-const onMapFilterChange = () => {
+const onMapFilterChange = debounce(() => {
   removePoints();
 
   createPoints(filterData(adverts), renderCard);
-};
+});
 
 const onSuccess = (data) => {
   adverts = data.slice();
@@ -96,7 +96,7 @@ const onSuccess = (data) => {
   disableFormMapFilter();
   createPoints(adverts.slice(0, FINISH_ELEMNT), renderCard);
 
-  mapFilters.addEventListener('change', debounce(onMapFilterChange));
+  mapFilters.addEventListener('change', onMapFilterChange);
 };
 
 const onError = () => {
@@ -113,7 +113,7 @@ map.on('load', () => {
   }, SCALE);
 
 
-const onButtonResetClick = () => {
+const resetPointsOnMap = () => {
   mainPinMarker.setLatLng({
     lat: PIN_LATITUDE,
     lng: PIN_LOMGITUDE,
@@ -132,6 +132,6 @@ const onButtonResetClick = () => {
 
 
 export {
-  onButtonResetClick,
+  resetPointsOnMap,
 };
 
