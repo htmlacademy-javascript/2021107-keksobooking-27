@@ -1,13 +1,8 @@
-import { disablingAdForm, disablingFormMapFilter } from './form.js';
+import { disableAdForm, disableFormMapFilter } from './form.js';
 import { makeRequest } from './api.js';
 import { showAlert, debounce } from './utils.js';
 import { renderCard } from './offer-card.js';
-import { filteringData } from './sort-points.js';
-
-
-const address = document.querySelector('#address');
-const mapFilters = document.querySelector('.map__filters');
-
+import { filterData } from './sort-points.js';
 
 const LAT = 35.6895;
 const LNG = 139.752465;
@@ -16,6 +11,10 @@ const PIN_LOMGITUDE = 139.73785;
 const SCALE = 11;
 const FINISH_ELEMNT = 10;
 const TEXT_ALLERT_MESSAGE = 'Данные не загрузились. Попробуйте ещё раз.';
+
+const address = document.querySelector('#address');
+const mapFilters = document.querySelector('.map__filters');
+
 let adverts = [];
 
 
@@ -62,7 +61,7 @@ const icon = L.icon({
 
 const pointsGroup = L.layerGroup().addTo(map);
 
-const creatingPoints = (data, card) => {
+const createPoints = (data, card) => {
   data.forEach((point) => {
     const { lat, lng } = point.location;
     const marker = L.marker(
@@ -85,19 +84,19 @@ const removePoints = () => {
   pointsGroup.clearLayers();
 };
 
-const onMapFilterChange = () => {
+const onMapFilterChange = debounce(() => {
   removePoints();
 
-  creatingPoints(filteringData(adverts), renderCard);
-};
+  createPoints(filterData(adverts), renderCard);
+});
 
 const onSuccess = (data) => {
   adverts = data.slice();
 
-  disablingFormMapFilter();
-  creatingPoints(adverts.slice(0, FINISH_ELEMNT), renderCard);
+  disableFormMapFilter();
+  createPoints(adverts.slice(0, FINISH_ELEMNT), renderCard);
 
-  mapFilters.addEventListener('change', debounce(onMapFilterChange));
+  mapFilters.addEventListener('change', onMapFilterChange);
 };
 
 const onError = () => {
@@ -105,7 +104,7 @@ const onError = () => {
 };
 
 map.on('load', () => {
-  disablingAdForm();
+  disableAdForm();
   makeRequest(onSuccess, onError, 'GET');
 })
   .setView({
@@ -114,7 +113,7 @@ map.on('load', () => {
   }, SCALE);
 
 
-const onButtonResetClick = () => {
+const resetPointsOnMap = () => {
   mainPinMarker.setLatLng({
     lat: PIN_LATITUDE,
     lng: PIN_LOMGITUDE,
@@ -127,12 +126,12 @@ const onButtonResetClick = () => {
 
   removePoints();
 
-  creatingPoints(adverts.slice(0, FINISH_ELEMNT), renderCard);
+  createPoints(adverts.slice(0, FINISH_ELEMNT), renderCard);
 
 };
 
 
 export {
-  onButtonResetClick,
+  resetPointsOnMap,
 };
 

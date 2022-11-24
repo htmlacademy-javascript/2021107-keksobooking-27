@@ -1,7 +1,7 @@
 const FINISH_ELEMNT = 10;
 const DEFAULT_VALUE = 'any';
 
-const priceHousing = {
+const PRICE_HOUSING = {
   'low': {
     start: 0,
     end: 10000,
@@ -20,7 +20,7 @@ const mapFilters = Array.from(document.querySelector('.map__filters').querySelec
 
 const filterRules = {
   'housing-type': (data, filter) => filter.value === data.offer.type,
-  'housing-price': (data, filter) => data.offer.price >= priceHousing[filter.value].start && data.offer.price < priceHousing[filter.value].end,
+  'housing-price': (data, filter) => data.offer.price >= PRICE_HOUSING[filter.value].start && data.offer.price < PRICE_HOUSING[filter.value].end,
   'housing-rooms': (data, filter) => +filter.value === data.offer.rooms,
   'housing-guests': (data, filter) => +filter.value === data.offer.guests,
   'housing-features': (data, filter) => {
@@ -30,7 +30,7 @@ const filterRules = {
   },
 };
 
-const filteringData = (data) => {
+const filterData = (data) => {
   const filteredOffers = [];
   let i = 0;
   let isResult;
@@ -51,5 +51,5 @@ const filteringData = (data) => {
 
 
 export {
-  filteringData,
+  filterData,
 };

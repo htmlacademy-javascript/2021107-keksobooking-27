@@ -1,6 +1,6 @@
 const ALERT_SHOW_TIME = 5000;
 
-const numDecline = (num, nominative, genitiveSingular, genitivePlural) => {
+const declineNumber = (num, nominative, genitiveSingular, genitivePlural) => {
   if (num > 10 && (Math.round((num % 100) / 10)) === 1) {
     return genitivePlural;
   }
@@ -51,7 +51,7 @@ const debounce = (callback, timeoutDelay = 500) => {
 
 
 export {
-  numDecline,
+  declineNumber,
   showAlert,
   isEscapeKey,
   isEnterKey,

@@ -1,23 +1,9 @@
-import { numDecline } from './utils.js';
+import { declineNumber } from './utils.js';
 import { getSuccessfulDownloadForm, getFailedDownloadForm } from './message-user.js';
 import { makeRequest } from './api.js';
 import { resetImages } from './avatar.js';
-import { resettingSlider } from './slider-form.js';
-import { onButtonResetClick } from './map.js';
-
-
-const adForm = document.querySelector('.ad-form');
-const mapForm = document.querySelector('.map__filters');
-const mapFilter = document.querySelector('.map__filters');
-const resetButton = adForm.querySelector('.ad-form__reset');
-const price = adForm.querySelector('#price');
-const roomNumber = adForm.querySelector('#room_number');
-const capacity = adForm.querySelector('#capacity');
-const type = adForm.querySelector('#type');
-const timein = adForm.querySelector('[name="timein"]');
-const timeout = adForm.querySelector('[name="timeout"]');
-const submitButton = adForm.querySelector('.ad-form__submit');
-
+import { resetSlider } from './slider-form.js';
+import { resetPointsOnMap } from './map.js';
 
 const WORDS = ['комната', 'комнаты', 'комнат', 'гость', 'гостя', 'гостей'];
 
@@ -35,6 +21,8 @@ const GUESTS_IN_ROOM = {
   3: ['3']
 };
 
+const TYPES_OF_HOUSES = ['bungalow', 'flat', 'hotel', 'house', 'palace'];
+
 const MIN_PRICE = {
   'bungalow': 0,
   'flat': 1000,
@@ -43,25 +31,39 @@ const MIN_PRICE = {
   'palace': 10000
 };
 
-const {bungalow, flat, hotel, house, palace} = MIN_PRICE;
+const { bungalow: bungalowPrice, flat: flatPrice, hotel: hotelPrice, house: housePrice, palace: palacePrice } = MIN_PRICE;
 
-const disablingEnablingForm = (form) => {
+const adForm = document.querySelector('.ad-form');
+const mapForm = document.querySelector('.map__filters');
+const mapFilter = document.querySelector('.map__filters');
+const resetButton = adForm.querySelector('.ad-form__reset');
+const price = adForm.querySelector('#price');
+const roomNumber = adForm.querySelector('#room_number');
+const capacity = adForm.querySelector('#capacity');
+const type = adForm.querySelector('#type');
+const timein = adForm.querySelector('[name="timein"]');
+const timeout = adForm.querySelector('[name="timeout"]');
+const submitButton = adForm.querySelector('.ad-form__submit');
+const sliderElement = document.querySelector('.ad-form__slider');
+
+
+const disableEnablingForm = (form) => {
   form.querySelectorAll('fieldset, select.map__filter').forEach((fieldItem) => {
     fieldItem.disabled = !fieldItem.disabled;
   });
 };
 
 
-const disablingAdForm = () => {
+const disableAdForm = () => {
   adForm.classList.toggle('ad-form--disabled');
 
-  disablingEnablingForm(adForm);
+  disableEnablingForm(adForm);
 };
 
-const disablingFormMapFilter = () => {
+const disableFormMapFilter = () => {
   mapFilter.classList.toggle('ad-form--disabled');
 
-  disablingEnablingForm(mapFilter);
+  disableEnablingForm(mapFilter);
 };
 
 
@@ -75,8 +77,8 @@ const pristine = new Pristine(adForm, {
 
 const validateCapacity = () => ROOMS_TO_GUEST[roomNumber.value].includes(capacity.value);
 
-const getCapacityErrorMessage = () => `Указанное количество комнат вмещает ${ROOMS_TO_GUEST[roomNumber.value].join(' или ')}  ${numDecline(+ROOMS_TO_GUEST[roomNumber.value], WORDS[3], WORDS[4], WORDS[5])}.`;
-const getRoomNumberErrorMessage = () => `Для указанного количества гостей требуется ${GUESTS_IN_ROOM[capacity.value].join(' или ')}  ${numDecline(+GUESTS_IN_ROOM[capacity.value], WORDS[0], WORDS[1], WORDS[2])}.`;
+const getCapacityErrorMessage = () => `Указанное количество комнат вмещает ${ROOMS_TO_GUEST[roomNumber.value].join(' или ')} ${declineNumber(+ROOMS_TO_GUEST[roomNumber.value], WORDS[3], WORDS[4], WORDS[5])}.`;
+const getRoomNumberErrorMessage = () => `Для указанного количества гостей требуется ${GUESTS_IN_ROOM[capacity.value].join(' или ')} ${declineNumber(+GUESTS_IN_ROOM[capacity.value], WORDS[0], WORDS[1], WORDS[2])}.`;
 
 const onCapacityChange = () => {
   pristine.validate(capacity);
@@ -108,16 +110,16 @@ roomNumber.addEventListener('change', onRoomNumberChange);
 
 const onPlaceholderChange = () => {
   switch (type.value) {
-    case 'bungalow': price.min = bungalow;
+    case TYPES_OF_HOUSES[0]: price.min = bungalowPrice;
       break;
-    case 'flat': price.min = flat;
+    case TYPES_OF_HOUSES[1]: price.min = flatPrice;
       break;
-    case 'hotel': price.min = hotel;
+    case TYPES_OF_HOUSES[2]: price.min = hotelPrice;
       break;
-    case 'house': price.min = house;
+    case TYPES_OF_HOUSES[3]: price.min = housePrice;
       break;
     default:
-      price.min = palace;
+      price.min = palacePrice;
   }
   price.placeholder = price.min;
 };
@@ -140,6 +142,7 @@ const onTypeChange = () => {
 
 type.addEventListener('change', onPlaceholderChange);
 type.addEventListener('change', onTypeChange);
+sliderElement.addEventListener('click', onTypeChange);
 
 
 const onTimeInChange = () => {
@@ -155,23 +158,20 @@ timein.addEventListener('change', onTimeInChange);
 timeout.addEventListener('change', onTimeOutChange);
 
 
-const resettingForm = () => {
+const resetForm = () => {
   adForm.reset();
   mapForm.reset();
   price.placeholder = 0;
   pristine.reset();
 };
 
-const onResetClick = () => {
-  resetButton.addEventListener('click', (evt) => {
-    evt.preventDefault();
-    resettingForm();
-    resetImages();
-    onButtonResetClick();
-  });
-};
+resetButton.addEventListener('click', (evt) => {
+  evt.preventDefault();
+  resetForm();
+  resetImages();
+  resetPointsOnMap();
+});
 
-onResetClick();
 
 const blockSubmitButton = () => {
   submitButton.disabled = true;
@@ -184,23 +184,28 @@ const unblockSubmitButton = () => {
 };
 
 
-const onUserFormSubmit = () => {
-  adForm.addEventListener('submit', (evt) => {
-    evt.preventDefault();
-    const isValid = pristine.validate();
-    if (isValid) {
-      const formData = new FormData(evt.target);
-      blockSubmitButton();
-      resettingSlider();
-      makeRequest(() => { resettingForm(); onButtonResetClick(); resetImages(); getSuccessfulDownloadForm(); unblockSubmitButton(); }, () => { getFailedDownloadForm(); unblockSubmitButton(); }, 'POST', formData);
-    }
-  });
-};
+adForm.addEventListener('submit', (evt) => {
+  evt.preventDefault();
+  const isValid = pristine.validate();
+  if (isValid) {
+    const formData = new FormData(evt.target);
+    blockSubmitButton();
+    resetSlider();
+    makeRequest(() => {
+      resetForm();
+      resetPointsOnMap();
+      resetImages();
+      getSuccessfulDownloadForm();
+      unblockSubmitButton();
+    }, () => {
+      getFailedDownloadForm();
+      unblockSubmitButton();
+    }, 'POST', formData);
+  }
+});
 
-
-onUserFormSubmit();
 
 export {
-  disablingAdForm,
-  disablingFormMapFilter,
+  disableAdForm,
+  disableFormMapFilter,
 };

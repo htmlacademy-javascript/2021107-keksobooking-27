@@ -5,49 +5,28 @@ const patternSuccess = document.querySelector('#success').content.querySelector(
 const patternFailed = document.querySelector('#error').content.querySelector('.error');
 
 
-const onSuccessMessageClick = () => {
-  body.removeChild(body.querySelector('.success'));
+const onMessageClick = () => {
+  let htmlClass;
+  if (document.querySelector('.error')) {
+    htmlClass = '.error';
+  } else {
+    htmlClass = '.success';
+  }
+  body.removeChild(body.querySelector(htmlClass));
 };
 
-const onSuccessMessageEscKeydown = (evt) => {
+const onMessageEscKeydown = (evt) => {
+  let htmlClass;
+
   if (isEscapeKey(evt)) {
     evt.preventDefault();
-    body.removeChild(body.querySelector('.success'));
-    document.removeEventListener('click', onSuccessMessageClick);
+    if (document.querySelector('.error')) {
+      htmlClass = '.error';
+    } else {
+      htmlClass = '.success';
+    }
+    body.removeChild(body.querySelector(htmlClass));
   }
-};
-
-const removeEscKeydown = () => {
-  document.removeEventListener('keydown', onSuccessMessageEscKeydown);
-};
-
-const closeOpenSuccessMessage = () => {
-  const successfulMessage = document.querySelector('.success');
-  document.addEventListener('keydown', onSuccessMessageEscKeydown, { once: true });
-  successfulMessage.addEventListener('click', onSuccessMessageClick, { once: true });
-  successfulMessage.addEventListener('click', removeEscKeydown, { once: true });
-};
-
-const getSuccessfulDownloadForm = () => {
-  const ticetElement = patternSuccess.cloneNode(true);
-  body.append(ticetElement);
-
-  closeOpenSuccessMessage();
-};
-
-
-const onFailedMessageEscKeydown = (evt) => {
-  if (isEscapeKey(evt)) {
-    evt.preventDefault();
-    body.removeChild(body.querySelector('.error'));
-
-  }
-};
-
-
-const onFailedMessageClick = () => {
-  body.removeChild(body.querySelector('.error'));
-
 };
 
 const onFailedMessageEnterKeydown = (evt) => {
@@ -58,10 +37,29 @@ const onFailedMessageEnterKeydown = (evt) => {
   }
 };
 
-const closeOpenFailedMessage = (buttonErrorForm) => {
-  document.addEventListener('keydown', onFailedMessageEscKeydown, { once: true });
-  document.addEventListener('click', onFailedMessageClick, { once: true });
-  buttonErrorForm.addEventListener('keydown', onFailedMessageEnterKeydown, { once: true });
+
+const removeEscKeydown = () => {
+  document.removeEventListener('keydown', onMessageEscKeydown);
+};
+
+const closeOpenMessage = (message) => {
+  document.addEventListener('keydown', onMessageEscKeydown, { once: true });
+  message.addEventListener('click', onMessageClick, { once: true });
+  message.addEventListener('click', removeEscKeydown, { once: true });
+
+
+  if (message === document.querySelector('.error')) {
+    const messageWindow = document.querySelector('.error__button');
+    messageWindow.addEventListener('keydown', onFailedMessageEnterKeydown, { once: true });
+  }
+
+};
+
+const getSuccessfulDownloadForm = () => {
+  const ticetElement = patternSuccess.cloneNode(true);
+  body.append(ticetElement);
+
+  closeOpenMessage(document.querySelector('.success'));
 };
 
 
@@ -69,7 +67,7 @@ const getFailedDownloadForm = () => {
   const ticetElement = patternFailed.cloneNode(true);
   body.append(ticetElement);
 
-  closeOpenFailedMessage(document.querySelector('.error__button'));
+  closeOpenMessage(document.querySelector('.error'));
 };
 
 
@@ -77,4 +75,5 @@ export {
   getSuccessfulDownloadForm,
   getFailedDownloadForm,
 };
+
 
