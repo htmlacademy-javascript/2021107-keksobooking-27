@@ -1,7 +1,6 @@
 import { declineNumber } from './utils.js';
 
 
-const WORDS_FOR_DECLENSIONS = ['комната', 'комнаты', 'комнат', 'гость', 'гостя', 'гостей'];
 const TYPES_OF_HOUSES = ['bungalow', 'flat', 'hotel', 'house', 'palace'];
 
 const TypeOfHousing = {
@@ -13,6 +12,8 @@ const TypeOfHousing = {
 };
 
 const { flat, bungalow, house, palace, hotel } = TypeOfHousing;
+const [комната, комнаты, комнат, гость, гостя, гостей] = ['комната', 'комнаты', 'комнат', 'гость', 'гостя', 'гостей'];
+
 
 const patternCardSticker = document.querySelector('#card').content.querySelector('.popup');
 
@@ -76,98 +77,91 @@ const addType = (htmlElement, data) => {
   }
 };
 
+const addCapacity = (htmlElement, data, secondData) => {
+  if (data && secondData) {
+    htmlElement.textContent =
+      `${data} ${declineNumber(data, комната, комнаты, комнат)}
+      для ${secondData} ${declineNumber(secondData, гостя, гостей, гость)}`;
+  } else {
+    htmlElement.remove();
+  }
+};
+
+const addTime = (htmlElement, data, secondData) => {
+  if (data && secondData) {
+    htmlElement.textContent = `Заезд после ${data}, выезд до ${secondData}`;
+  } else {
+    htmlElement.remove();
+  }
+};
+
+const chooseFeatures = (fieldset, htmlElement, data) => {
+  if (data) {
+    deleteUnnecessaryElements(htmlElement, data);
+  } else {
+    fieldset.remove();
+  }
+};
+
+const addPhotos = (htmlElement, data) => {
+  if (data) {
+    htmlElement.append(renderImage(htmlElement, data));
+  } else {
+    htmlElement.remove();
+  }
+};
+
+const addAvatar = (htmlElement, data) => {
+  if (data) {
+    htmlElement.src = data;
+  } else {
+    htmlElement.remove();
+  }
+};
+
 const renderCard = ({ author, offer }) => {
   const ticetElement = patternCardSticker.cloneNode(true);
 
-  const word = WORDS_FOR_DECLENSIONS;
 
-  //********************** */
   const title = ticetElement.querySelector('.popup__title');
   addTextHtmlElement(title, offer.title);
 
-  // const title = ticetElement.querySelector('.popup__title');
-  // if (offer.title) {
-  //   title.textContent = offer.title;
-  // } else {
-  //   title.remove();
-  // }
 
   const address = ticetElement.querySelector('.popup__text--address');
   addTextHtmlElement(address, offer.address);
 
-  // const address = ticetElement.querySelector('.popup__text--address');
-  // if (offer.address) {
-  //   address.textContent = offer.address;
-  // } else {
-  //   address.remove();
-  // }
 
   const price = ticetElement.querySelector('.popup__text--price');
   addPrice(price, offer.price);
 
-  // const price = ticetElement.querySelector('.popup__text--price');
-  // if (offer.price) {
-  //   price.textContent = `${offer.price}  ₽/ночь`;
-  // } else {
-  //   price.remove();
-  // }
 
   const type = ticetElement.querySelector('.popup__type');
   addType(type, offer.type);
-  // const type = ticetElement.querySelector('.popup__type');
-  // if (offer.type) {
-  //   type.textContent = getSortRooms(offer.type);
-  // } else {
-  //   type.remove();
-  // }
+
 
   const capacity = ticetElement.querySelector('.popup__text--capacity');
-  if (offer.rooms && offer.guests) {
-    capacity.textContent =
-      `${offer.rooms} ${declineNumber(offer.rooms, word[0], word[1], word[2])}
-      для ${offer.guests} ${declineNumber(offer.guests, word[3], word[4], word[5])}`;
-  } else {
-    capacity.remove();
-  }
+  addCapacity(capacity, offer.rooms, offer.guests);
+
 
   const time = ticetElement.querySelector('.popup__text--time');
-  if (offer.checkin && offer.checkout) {
-    time.textContent = `Заезд после ${offer.checkin}, выезд до ${offer.checkout}`;
-  } else {
-    time.remove();
-  }
+  addTime(time, offer.checkin, offer.checkout);
+
 
   const features = ticetElement.querySelector('.popup__features');
   const feature = features.querySelectorAll('.popup__feature');
-  if (offer.features) {
-    deleteUnnecessaryElements(feature, offer.features);
-  } else {
-    features.remove();
-  }
+  chooseFeatures(features, feature, offer.features);
+
 
   const description = ticetElement.querySelector('.popup__description');
   addTextHtmlElement(description, offer.description);
 
-  // const description = ticetElement.querySelector('.popup__description');
-  // if (offer.description) {
-  //   description.textContent = offer.description;
-  // } else {
-  //   description.remove();
-  // }
 
   const photos = ticetElement.querySelector('.popup__photos');
-  if (offer.photos) {
-    photos.append(renderImage(photos, offer.photos));
-  } else {
-    photos.remove();
-  }
+  addPhotos(photos, offer.photos);
+
 
   const avatar = ticetElement.querySelector('.popup__avatar');
-  if (author.avatar) {
-    avatar.src = author.avatar;
-  } else {
-    avatar.remove();
-  }
+  addAvatar(avatar, author.avatar);
 
   return ticetElement;
 };
