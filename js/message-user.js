@@ -7,7 +7,7 @@ const patternFailed = document.querySelector('#error').content.querySelector('.e
 
 const onMessageClick = () => {
   let htmlClass;
-  if (document.querySelector('.error__button')) {
+  if (document.querySelector('.error')) {
     htmlClass = '.error';
   } else {
     htmlClass = '.success';
@@ -20,7 +20,7 @@ const onMessageEscKeydown = (evt) => {
 
   if (isEscapeKey(evt)) {
     evt.preventDefault();
-    if (document.querySelector('.error__button')) {
+    if (document.querySelector('.error')) {
       htmlClass = '.error';
     } else {
       htmlClass = '.success';
@@ -44,16 +44,13 @@ const removeEscKeydown = () => {
 
 const closeOpenMessage = (message) => {
   document.addEventListener('keydown', onMessageEscKeydown, { once: true });
+  message.addEventListener('click', onMessageClick, { once: true });
+  message.addEventListener('click', removeEscKeydown, { once: true });
 
-  if (message === document.querySelector('.success')) {
-    message.addEventListener('click', onMessageClick, { once: true });
-    message.addEventListener('click', removeEscKeydown, { once: true });
 
-  } else {
-    const messageWindow = document.querySelector('.error');
-    messageWindow.addEventListener('click', onMessageClick, { once: true });
-    messageWindow.addEventListener('click', removeEscKeydown, { once: true });
-    message.addEventListener('keydown', onFailedMessageEnterKeydown, { once: true });
+  if (message === document.querySelector('.error')) {
+    const messageWindow = document.querySelector('.error__button');
+    messageWindow.addEventListener('keydown', onFailedMessageEnterKeydown, { once: true });
   }
 
 };
@@ -70,7 +67,7 @@ const getFailedDownloadForm = () => {
   const ticetElement = patternFailed.cloneNode(true);
   body.append(ticetElement);
 
-  closeOpenMessage(document.querySelector('.error__button'));
+  closeOpenMessage(document.querySelector('.error'));
 };
 
 

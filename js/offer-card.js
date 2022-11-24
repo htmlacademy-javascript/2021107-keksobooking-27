@@ -14,6 +14,9 @@ const TypeOfHousing = {
 
 const { flat, bungalow, house, palace, hotel } = TypeOfHousing;
 
+const patternCardSticker = document.querySelector('#card').content.querySelector('.popup');
+
+
 const getSortRooms = (typeHouse) => {
   switch (typeHouse) {
     case TYPES_OF_HOUSES[1]:
@@ -49,42 +52,74 @@ const renderImage = (container, needArray) => {
   return fragmentPhoto;
 };
 
+const addTextHtmlElement = (htmlElement, data) => {
+  if (data) {
+    htmlElement.textContent = data;
+  } else {
+    htmlElement.remove();
+  }
+};
 
-const patternCardSticker = document.querySelector('#card').content.querySelector('.popup');
+const addPrice = (htmlElement, data) => {
+  if (data) {
+    htmlElement.textContent = `${data}  ₽/ночь`;
+  } else {
+    htmlElement.remove();
+  }
+};
 
+const addType = (htmlElement, data) => {
+  if (data) {
+    htmlElement.textContent = getSortRooms(data);
+  } else {
+    htmlElement.remove();
+  }
+};
 
 const renderCard = ({ author, offer }) => {
   const ticetElement = patternCardSticker.cloneNode(true);
 
   const word = WORDS_FOR_DECLENSIONS;
 
+  //********************** */
   const title = ticetElement.querySelector('.popup__title');
-  if (offer.title) {
-    title.textContent = offer.title;
-  } else {
-    title.remove();
-  }
+  addTextHtmlElement(title, offer.title);
+
+  // const title = ticetElement.querySelector('.popup__title');
+  // if (offer.title) {
+  //   title.textContent = offer.title;
+  // } else {
+  //   title.remove();
+  // }
 
   const address = ticetElement.querySelector('.popup__text--address');
-  if (offer.address) {
-    address.textContent = offer.address;
-  } else {
-    address.remove();
-  }
+  addTextHtmlElement(address, offer.address);
+
+  // const address = ticetElement.querySelector('.popup__text--address');
+  // if (offer.address) {
+  //   address.textContent = offer.address;
+  // } else {
+  //   address.remove();
+  // }
 
   const price = ticetElement.querySelector('.popup__text--price');
-  if (offer.price) {
-    price.textContent = `${offer.price}  ₽/ночь`;
-  } else {
-    price.remove();
-  }
+  addPrice(price, offer.price);
+
+  // const price = ticetElement.querySelector('.popup__text--price');
+  // if (offer.price) {
+  //   price.textContent = `${offer.price}  ₽/ночь`;
+  // } else {
+  //   price.remove();
+  // }
 
   const type = ticetElement.querySelector('.popup__type');
-  if (offer.type) {
-    type.textContent = getSortRooms(offer.type);
-  } else {
-    type.remove();
-  }
+  addType(type, offer.type);
+  // const type = ticetElement.querySelector('.popup__type');
+  // if (offer.type) {
+  //   type.textContent = getSortRooms(offer.type);
+  // } else {
+  //   type.remove();
+  // }
 
   const capacity = ticetElement.querySelector('.popup__text--capacity');
   if (offer.rooms && offer.guests) {
@@ -111,11 +146,14 @@ const renderCard = ({ author, offer }) => {
   }
 
   const description = ticetElement.querySelector('.popup__description');
-  if (offer.description) {
-    description.textContent = offer.description;
-  } else {
-    description.remove();
-  }
+  addTextHtmlElement(description, offer.description);
+
+  // const description = ticetElement.querySelector('.popup__description');
+  // if (offer.description) {
+  //   description.textContent = offer.description;
+  // } else {
+  //   description.remove();
+  // }
 
   const photos = ticetElement.querySelector('.popup__photos');
   if (offer.photos) {
